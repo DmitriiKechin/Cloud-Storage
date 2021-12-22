@@ -24,7 +24,6 @@ const AppWraper = styled.div`
 
 const App: React.FC = () => {
   const [message, setMessage] = useState<string>('');
-  const [requestCount, setRequestCount] = useState<number>(0);
   const [isText, setIsText] = useState<boolean>(false);
   const { token, login, logout, user, auth } = useAuth();
   const isAuthenticated: boolean = !!token;
@@ -33,8 +32,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     auth();
-  }, [auth, requestCount]);
-
+  }, [auth]);
   return (
     <GlobalContext.Provider
       value={{
@@ -45,8 +43,6 @@ const App: React.FC = () => {
           logout,
           token,
           user,
-          requestCount,
-          setRequestCount,
         },
       }}
     >

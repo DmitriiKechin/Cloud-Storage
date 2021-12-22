@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { TitleLogo } from '../components/TitleLogo';
 import { GlobalContext } from '../contex/GlobalContext';
-
 import { Button } from '../elements/Button';
 import { Flex } from '../elements/Flex';
 import { Input } from '../elements/Input';
@@ -23,7 +22,6 @@ const StyledAuthPage = styled.form`
 
 export const AuthPage: React.FC = () => {
   const { loading, request } = useHttp();
-
   const { auth } = useContext(GlobalContext);
   const [formDate, setFormDate] = useState<{ email: string; password: string }>(
     {
@@ -41,10 +39,10 @@ export const AuthPage: React.FC = () => {
   ) => {
     event.preventDefault();
 
-    const data = await request('/api/auth/registration', 'POST', {
+    const data: IDataLogin = await request('/api/auth/registration', 'POST', {
       ...formDate,
     });
-    auth.login(data);
+    auth.login(data.token, data.user);
   };
 
   const loginHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -53,7 +51,7 @@ export const AuthPage: React.FC = () => {
     const data: IDataLogin = await request('/api/auth/login', 'POST', {
       ...formDate,
     });
-    auth.login(data);
+    auth.login(data.token, data.user);
   };
 
   return (

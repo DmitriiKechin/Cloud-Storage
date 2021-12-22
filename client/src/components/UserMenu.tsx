@@ -7,7 +7,7 @@ import { Button } from '../elements/Button';
 import { GlobalContext } from '../contex/GlobalContext';
 import { FileLoad } from '../elements/FileLoad';
 import { useHttp } from '../hooks/http.hook';
-import { IDataLogin, ObjectString } from '../Types/types';
+import { ObjectString } from '../Types/types';
 import { SvgAddImage } from '../elements/svg/svgAddImage';
 import { SvgExit } from '../elements/svg/svgExit';
 

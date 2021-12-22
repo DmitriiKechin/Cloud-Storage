@@ -1,16 +1,15 @@
 import { useCallback, useState } from 'react';
 import { IDataLogin, IUser, ObjectString, stringOrNull } from '../Types/types';
-import { useHttp } from './http.hook';
 
 const storageName: string = 'userData';
 
 interface IStorageUser {
   token: stringOrNull;
-  user: IUser | null;
+  user: IUser;
 }
 
 interface IUseAuth {
-  login: { (dataUser: IDataLogin): void };
+  login: { (token: string, user: IUser): void };
   logout: { (): void };
   auth(): void;
   token: stringOrNull;
@@ -20,16 +19,12 @@ interface IUseAuth {
 export const useAuth = (): IUseAuth => {
   const [token, setToken] = useState<stringOrNull>(null);
   const [user, setUser] = useState<IUser | null>(null);
-  const { request } = useHttp();
 
-  const login = useCallback((dataUser: IDataLogin) => {
-    setToken(dataUser.token);
-    setUser(dataUser.user);
+  const login = useCallback((token: string, user: IUser) => {
+    setToken(token);
+    setUser(user);
 
-    localStorage.setItem(
-      storageName,
-      JSON.stringify({ token: dataUser.token, user: dataUser.user })
-    );
+    localStorage.setItem(storageName, JSON.stringify({ token, user }));
   }, []);
 
   const logout = useCallback(() => {
@@ -38,7 +33,7 @@ export const useAuth = (): IUseAuth => {
     localStorage.removeItem(storageName);
   }, []);
 
-  const auth = useCallback((): void => {
+  const auth = useCallback(async (): Promise<void> => {
     const data: IStorageUser | null = JSON.parse(
       localStorage.getItem(storageName) || 'null'
     );
@@ -48,23 +43,21 @@ export const useAuth = (): IUseAuth => {
       const headers: ObjectString = {};
       headers['authorization'] = data.token || 'null';
 
-      (async () => {
-        try {
-          const data: IDataLogin = await request(
-            '/api/auth/auth',
-            'GET',
-            {},
-            headers
-          );
-          console.log('auth login');
-          login(data);
-        } catch (e) {
-          console.log('auth logout');
-          logout();
-        }
-      })();
+      try {
+        const response: Response = await fetch('/api/auth/auth', {
+          method: 'GET',
+          body: null,
+          headers,
+        });
+        console.log('auth login');
+        const data: IDataLogin = await response.json();
+        login(data.token, data.user);
+      } catch (e) {
+        console.log('auth logout');
+        logout();
+      }
     }
-  }, [login, logout, request]);
+  }, [login, logout]);
 
   return { login, logout, token, user, auth };
 };

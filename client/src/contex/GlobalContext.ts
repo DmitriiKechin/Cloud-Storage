@@ -1,5 +1,5 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
-import { IDataLogin, IUser, stringOrNull } from '../Types/types';
+import { IUser, stringOrNull } from '../Types/types';
 
 interface IMessage {
   message: string;
@@ -9,13 +9,11 @@ interface IMessage {
 }
 
 interface IAuth {
-  login: { (dataUser: IDataLogin): void };
+  login: { (token: string, user: IUser): void };
   logout: { (): void };
   token: stringOrNull;
   user: IUser | null;
   isAuthenticated: boolean;
-  requestCount: number;
-  setRequestCount: Dispatch<SetStateAction<number>>;
 }
 
 interface IGlobalContext {
@@ -36,7 +34,5 @@ export const GlobalContext = createContext<IGlobalContext>({
     login: () => {},
     logout: () => {},
     isAuthenticated: false,
-    requestCount: 0,
-    setRequestCount: () => {},
   },
 });

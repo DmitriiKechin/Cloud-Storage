@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { GlobalContext } from '../contex/GlobalContext';
 import { Button } from '../elements/Button';
 import { ButtonClose } from '../elements/ButtonClose';
 import { Flex } from '../elements/Flex';
 import { Input } from '../elements/Input';
 import { PageCenter } from '../elements/PageCenter';
 import { useHttp } from '../hooks/http.hook';
-import { IFile, ObjectString } from '../Types/types';
+import { IFile } from '../Types/types';
 
 const Wrapper = styled.div<{ visible: boolean }>`
   display: ${(props) => (props.visible ? 'block' : 'none')};
@@ -38,9 +37,6 @@ export const CreateFolder: React.FC<ICreateFolder> = ({
 }) => {
   const { loading, request, isLoadingSuccess } = useHttp();
   const [folderName, setFollderName] = useState<string>('');
-  const {
-    auth: { token },
-  } = useContext(GlobalContext);
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFollderName(event.target.value);
@@ -49,25 +45,17 @@ export const CreateFolder: React.FC<ICreateFolder> = ({
   useEffect(() => {
     if (isLoadingSuccess) {
       setTimeout(() => {
-        closeCreateFolder();
+        closeCreateFolder(); //нельзя включить так как функция не чиста
       }, 1000);
     }
   }, [isLoadingSuccess]);
 
   const createFolder = async (): Promise<void> => {
-    const headers: ObjectString = {};
-    headers['authorization'] = token || 'null';
-
-    const data: IFile = await request(
-      '/api/files',
-      'POST',
-      {
-        name: folderName,
-        type: 'dir',
-        parent: '61b5dc3270e3271c991674ff',
-      },
-      headers
-    );
+    const data: IFile = await request('/api/files', 'POST', {
+      name: folderName,
+      type: 'dir',
+      parent: '61b5dc3270e3271c991674ff',
+    });
   };
 
   useEffect(() => {

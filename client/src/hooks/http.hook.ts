@@ -1,6 +1,7 @@
 import { useCallback, useContext, useState } from 'react';
 import { GlobalContext } from '../contex/GlobalContext';
 import { ObjectString } from '../Types/types';
+import { useAuth } from './auth.hook';
 import { useMessage } from './Message';
 
 type IMethod =
@@ -19,8 +20,9 @@ export const useHttp = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isLoadingSuccess, setIsLoadingSuccess] = useState<boolean>(false);
   const message = useMessage();
+  const { auth } = useAuth();
   const {
-    auth: { requestCount, setRequestCount },
+    auth: { token },
   } = useContext(GlobalContext);
 
   const request = useCallback(
@@ -40,6 +42,8 @@ export const useHttp = () => {
         } else if (bodyObject instanceof FormData) {
           body = bodyObject;
         }
+        headers['authorization'] = token || 'null';
+        console.log('token: ', token);
 
         console.log('url: ', url);
         console.log('method: ', method);
@@ -47,11 +51,9 @@ export const useHttp = () => {
         console.log('headers: ', headers);
 
         const response: Response = await fetch(url, { method, body, headers });
-
         const data = await response.json();
+        auth();
         console.log('data: ', data);
-        setRequestCount(requestCount + 1);
-        console.log('requestCount: ', requestCount);
 
         if (!response.ok) {
           throw new Error(data.message || 'Что-то пошло не так');
@@ -73,7 +75,7 @@ export const useHttp = () => {
         message('');
       }
     },
-    [message, requestCount, setRequestCount]
+    [auth, message, token]
   );
 
   return { loading, request, isLoadingSuccess };
