@@ -1,0 +1,13 @@
+{
+  "include": ["server/src/**/*"],
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "strict": true,
+    "typeRoots": ["server/src/types"],
+    "outDir": "server/build",
+    "esModuleInterop": true,
+    "baseUrl": "."
+  }
+}
