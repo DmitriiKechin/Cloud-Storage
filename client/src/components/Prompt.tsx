@@ -5,8 +5,7 @@ import { ButtonClose } from '../elements/ButtonClose';
 import { Flex } from '../elements/Flex';
 import { Input } from '../elements/Input';
 import { PageCenter } from '../elements/PageCenter';
-import { useHttp } from '../hooks/http.hook';
-import { IFile } from '../Types/types';
+import useRequest from '../hooks/request.hook';
 
 const Wrapper = styled.div<{ visible: boolean }>`
   display: ${(props) => (props.visible ? 'block' : 'none')};
@@ -26,62 +25,62 @@ const StyledCreateFolder = styled.div`
   padding: 1.5rem;
 `;
 
-interface ICreateFolder {
+interface IPrompt {
+  title: string;
+  valueDefault?: string;
   visible: boolean;
-  closeCreateFolder(): void;
+  closePrompt(): void;
+  promptHandler(value: string): Promise<void>;
 }
 
-export const CreateFolder: React.FC<ICreateFolder> = ({
-  closeCreateFolder,
+export const Prompt: React.FC<IPrompt> = ({
   visible,
+  closePrompt,
+  title,
+  valueDefault,
+  promptHandler,
 }) => {
-  const { loading, request, isLoadingSuccess } = useHttp();
-  const [folderName, setFollderName] = useState<string>('');
+  const { loading, isSuccess } = useRequest();
+  const [value, setValue] = useState<string>(valueDefault || '');
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFollderName(event.target.value);
+    setValue(event.target.value);
   };
 
   useEffect(() => {
-    if (isLoadingSuccess) {
+    if (isSuccess) {
       setTimeout(() => {
-        closeCreateFolder(); //нельзя включить так как функция не чиста
+        closePrompt(); //нельзя включить так как функция не чиста
       }, 1000);
     }
-  }, [isLoadingSuccess]);
-
-  const createFolder = async (): Promise<void> => {
-    const data: IFile = await request('/api/files', 'POST', {
-      name: folderName,
-      type: 'dir',
-      parent: '61b5dc3270e3271c991674ff',
-    });
-  };
+  }, [isSuccess]);
 
   useEffect(() => {
-    setFollderName('');
-  }, [visible]);
+    setValue(valueDefault || '');
+  }, [valueDefault, visible]);
 
   return (
     <Wrapper visible={visible}>
       <PageCenter>
         <StyledCreateFolder>
-          <ButtonClose close={closeCreateFolder} />
+          <ButtonClose close={closePrompt} />
           <Flex direction="column" justify="space-between" height="100%">
-            <Title>Введите название директории</Title>
+            <Title>{title}</Title>
             <Input
               changeHandler={changeHandler}
               type="text"
               labelTitle="Name"
               name="folderName"
-              value={folderName}
+              value={value}
             />
 
             <Flex justify="flex-end">
               <Button
-                click={createFolder}
+                click={() => {
+                  promptHandler(value);
+                }}
                 load={loading}
-                validate={isLoadingSuccess}
+                validate={isSuccess}
               >
                 Ok
               </Button>

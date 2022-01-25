@@ -12,5 +12,9 @@ declare module 'styled-components' {
     sizes: {
       wrapper: string;
     };
+    media: {
+      mobile: string;
+      desktop: string;
+    };
   }
 }

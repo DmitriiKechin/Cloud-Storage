@@ -1,9 +1,9 @@
-import * as express from 'express';
-import * as jwt from 'jsonwebtoken';
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import config from 'config';
+// const config = require('config');
 
-const config = require('config');
-
-module.exports = (
+const authMiddleware = (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
@@ -26,3 +26,5 @@ module.exports = (
     return res.status(401).json({ message: 'Auth error' });
   }
 };
+
+export default authMiddleware;

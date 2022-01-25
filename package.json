@@ -19,7 +19,12 @@
   "author": "Dmitrii Kechin <dmitrii.kechin@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/config": "0.0.41",
+    "@types/express-fileupload": "^1.2.2",
+    "@types/fs-extra": "^9.0.13",
     "@types/jsonwebtoken": "^8.5.6",
+    "@types/uuid": "^8.3.4",
     "concurrently": "^6.3.0",
     "nodemon": "^2.0.14",
     "ts-node": "^10.4.0",
@@ -33,6 +38,7 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "express-validator": "^6.13.0",
+    "fs-extra": "^10.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
     "uuid": "^8.3.2"

@@ -1,13 +1,23 @@
-const express = require('express');
-const config = require('config');
-const mongoose = require('mongoose');
-const authRouter = require('./routes/auth.routes');
-const fileRouter = require('./routes/file.routes');
+import express from 'express';
+import config from 'config';
+import mongoose from 'mongoose';
+import authRouter from './routes/auth.routes';
+import fileRouter from './routes/file.routes';
+
+// import fileUpload from 'express-fileupload';
+
+// const express = require('express');
+// const config = require('config');
+// const mongoose = require('mongoose');
+// const authRouter = require('./routes/auth.routes');
+
+// const fileRouter = require('./routes/file.routes');
 const fileUpload = require('express-fileupload');
+
 const app = express();
 const PORT: number = config.get('port') || 5000;
 
-app.use(fileUpload({}));
+app.use(fileUpload());
 app.use(express.json());
 app.use(express.static('./static'));
 app.use('/api/auth', authRouter);

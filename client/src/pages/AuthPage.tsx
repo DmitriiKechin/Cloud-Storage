@@ -1,14 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { TitleLogo } from '../components/TitleLogo';
-import { GlobalContext } from '../contex/GlobalContext';
 import { Button } from '../elements/Button';
 import { Flex } from '../elements/Flex';
 import { Input } from '../elements/Input';
 import { PageCenter } from '../elements/PageCenter';
-import { useHttp } from '../hooks/http.hook';
+import useApi from '../hooks/api.hook';
 import logo from '../img/logo.svg';
 import { IDataLogin } from '../Types/types';
+import useAuth from '../hooks/auth.hook';
+import useRequest from '../hooks/request.hook';
 
 const StyledAuthPage = styled.form`
   width: 22rem;
@@ -21,8 +22,10 @@ const StyledAuthPage = styled.form`
 `;
 
 export const AuthPage: React.FC = () => {
-  const { loading, request } = useHttp();
-  const { auth } = useContext(GlobalContext);
+  const api = useApi();
+  const auth = useAuth();
+  const { loading, isSuccess } = useRequest();
+
   const [formDate, setFormDate] = useState<{ email: string; password: string }>(
     {
       email: '',
@@ -34,25 +37,35 @@ export const AuthPage: React.FC = () => {
     setFormDate({ ...formDate, [event.target.name]: event.target.value });
   };
 
-  const registerHandler = async (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
+  // const registerHandler = async (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ) => {
+  //   event.preventDefault();
 
-    const data: IDataLogin = await request('/api/auth/registration', 'POST', {
-      ...formDate,
+  //   const data: IDataLogin = await api!.auth.registration({
+  //     ...formDate,
+  //   });
+  //   data && auth.login(data.token, data.user, auth.isAuthorization);
+  // };
+
+  const testValuesOfLogin = (event: React.MouseEvent): void => {
+    event.preventDefault();
+    setFormDate({
+      email: 'test@test.com',
+      password: 'test',
     });
-    auth.login(data.token, data.user);
   };
 
   const loginHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    const data: IDataLogin = await request('/api/auth/login', 'POST', {
-      ...formDate,
-    });
-    auth.login(data.token, data.user);
+    const data: IDataLogin = await api!.auth.login({ ...formDate });
+    setTimeout(() => {
+      data && auth.login(data.token, data.user, auth.isAuthorization);
+    }, 1500);
   };
+
+  // console.log('Auth page render');
 
   return (
     <PageCenter>
@@ -75,13 +88,14 @@ export const AuthPage: React.FC = () => {
             labelTitle={'Password'}
             required={true}
           />
-          <Flex justify={'space-between'}>
-            <Button click={registerHandler} load={loading} validate={false}>
+          <Flex direction="row-reverse" justify={'space-between'}>
+            {/* <Button click={registerHandler} load={loading} validate={false}>
               Registration
-            </Button>
-            <Button click={loginHandler} load={loading} validate={false}>
+            </Button> */}
+            <Button click={loginHandler} load={loading} validate={isSuccess}>
               Log In
             </Button>
+            <Button click={testValuesOfLogin}>Set test values</Button>
           </Flex>
         </Flex>
       </StyledAuthPage>

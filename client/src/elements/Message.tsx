@@ -1,10 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
-import { GlobalContext } from '../contex/GlobalContext';
-
-interface IMessage {
-  text: string;
-}
+import useMessage from '../hooks/message.hook';
 
 const MessageStyled = styled.div<{ isText: boolean }>`
   position: absolute;
@@ -46,9 +42,8 @@ const MessageStyled = styled.div<{ isText: boolean }>`
   }
 `;
 
-export const Message: React.FC<IMessage> = () => {
-  const {
-    modal: { message: text, isText },
-  } = useContext(GlobalContext);
-  return <MessageStyled isText={isText}>{text}</MessageStyled>;
+export const Message: React.FC = () => {
+  const { message } = useMessage();
+  const isText = !!message;
+  return <MessageStyled isText={isText}>{message}</MessageStyled>;
 };

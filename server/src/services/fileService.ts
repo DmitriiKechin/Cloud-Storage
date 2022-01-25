@@ -1,15 +1,13 @@
 import { IFile } from '../types/models/file';
+// import fs from 'fs';
+import * as fs from 'fs-extra';
+import config from 'config';
 
-const fs = require('fs');
-//const File = require('../models/File');
-const config = require('config');
-
-class FileService {
+const FileService = {
   createDir(file: IFile) {
     const filePath: string = `${config.get('filePath')}\\${file.user}\\${
       file.path
     }`;
-    console.log('filePath: ', filePath);
 
     return new Promise<{ message: string }>((resolve, reject) => {
       try {
@@ -23,20 +21,30 @@ class FileService {
         return reject({ message: 'File error' });
       }
     });
-  }
+  },
 
   deleteFile(file: IFile) {
     const path = this.getPath(file);
     if (file.type === 'dir') {
-      fs.rmdirSync(path);
+      fs.removeSync(path);
     } else {
       fs.unlinkSync(path);
     }
-  }
+  },
 
   getPath(file: IFile): string {
     return config.get('filePath') + '\\' + file.user + '\\' + file.path;
-  }
-}
+  },
 
-module.exports = new FileService();
+  //   rename(file: IFile, oldPath: string) {
+  //     const path1 = this.getPath(file);
+  //     console.log('path: ', path1);
+  //     console.log('oldPath: ', oldPath);
+
+  //     if (!fs.existsSync(path1) && fs.existsSync(oldPath)) {
+  //       fs.moveSync(oldPath, path1);
+  //     } else throw new Error('file already exists');
+  //   },
+};
+
+export default FileService;

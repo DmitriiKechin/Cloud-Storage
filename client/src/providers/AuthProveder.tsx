@@ -1,0 +1,107 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import AuthContext from '../contex/AuthContext';
+import useMessage from '../hooks/message.hook';
+import { IDataLogin, IUser, ObjectString, stringOrNull } from '../Types/types';
+
+const storageName: string = 'userData';
+
+interface IStorageUser {
+  token: stringOrNull;
+  user: IUser;
+}
+
+const AuthProvider: React.FC = ({ children }) => {
+  const [token, setToken] = useState<stringOrNull>(null);
+  const { setMessage } = useMessage();
+  const [user, setUser] = useState<IUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isAuthorization, setAuthorization] = useState(false);
+
+  const login = useCallback(
+    (token: string, user: IUser, isAuthorization: boolean) => {
+      setToken(token);
+      setUser(user);
+
+      if (!isAuthorization) {
+        setAuthorization(true);
+      }
+
+      console.log('login');
+      localStorage.setItem(storageName, JSON.stringify({ token, user }));
+    },
+    []
+  );
+
+  const logout = useCallback(() => {
+    setToken(null);
+    setUser(null);
+    setAuthorization(false);
+    localStorage.removeItem(storageName);
+  }, []);
+
+  const auth = useCallback(
+    async (token: string, isAuthorization: boolean): Promise<void> => {
+      const headers: ObjectString = {};
+      headers['authorization'] = token || 'null';
+
+      try {
+        const response: Response = await fetch('/api/auth/auth', {
+          method: 'GET',
+          body: null,
+          headers,
+        });
+        const data: IDataLogin = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Что то пошло не так');
+        }
+
+        login(data.token, data.user, isAuthorization);
+      } catch (e: any) {
+        console.log('logout');
+        setMessage(e.message);
+        logout();
+        setMessage('');
+      }
+    },
+    [login, logout, setMessage]
+  );
+
+  useEffect(() => {
+    (async () => {
+      const data: IStorageUser | null = JSON.parse(
+        localStorage.getItem(storageName) || 'null'
+      );
+      // console.log('auth');
+
+      if (data && data.token) {
+        setLoading(true);
+        await auth(data.token, isAuthorization);
+      }
+      setLoading(false);
+    })();
+  }, [auth]);
+
+  // useEffect(() => {
+  //   console.log('auth');
+  // }, [auth]);
+
+  const contextValue = useMemo(
+    () => ({
+      isAuthorization,
+      loading,
+      login,
+      logout,
+      token,
+      user,
+      auth,
+    }),
+    [login, logout, token, user, auth, loading, isAuthorization]
+  );
+
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
+};
+
+export default AuthProvider;

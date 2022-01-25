@@ -18,7 +18,6 @@ interface IStyledFlex {
   justify?: justify;
   margin?: string;
   parentHeight?: boolean;
-  maxWidth?: string;
   height?: string;
   width?: string;
 }
@@ -41,8 +40,6 @@ const StyledFlex = styled.div<IStyledFlex>`
     css`
       cursor: pointer;
     `};
-
-  max-width: ${(props) => props.maxWidth || '100%'};
 
   flex-direction: ${(props) => props.direction || 'row'};
   align-items: ${(props) => props.align || 'strech'};

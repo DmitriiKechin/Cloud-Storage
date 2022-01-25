@@ -1,4 +1,5 @@
-import { ObjectId, Document } from 'mongoose';
+import { ObjectId, Document, Types } from 'mongoose';
+import { IUser } from './user';
 
 export interface IFile extends Document {
   name: string;
@@ -6,7 +7,8 @@ export interface IFile extends Document {
   accessLink: string;
   size: number;
   path: string;
-  user: ObjectId;
-  parent: ObjectId;
-  childs: ObjectId[];
+  user: string;
+  date: number;
+  parent: string;
+  childs: string[];
 }

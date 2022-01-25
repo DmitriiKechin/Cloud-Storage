@@ -150,11 +150,11 @@ export const Input: React.FC<IInput> = ({
   required,
   margin,
 }) => {
-  const keyPressHandler = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      console.log('Enter');
-    }
-  };
+  // const keyPressHandler = (event: React.KeyboardEvent) => {
+  //   if (event.key === 'Enter') {
+  //     console.log('Enter');
+  //   }
+  // };
 
   return (
     <InputWrapper margin={margin}>
@@ -163,7 +163,7 @@ export const Input: React.FC<IInput> = ({
         name={name}
         value={value}
         type={type}
-        onKeyPress={keyPressHandler}
+        // onKeyPress={keyPressHandler}
         placeholder=" "
         required={required ? required : false}
       />

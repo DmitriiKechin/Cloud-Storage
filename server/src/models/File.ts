@@ -1,16 +1,19 @@
 import { IFile } from '../types/models/file';
-import { Schema } from 'mongoose';
-const { model, ObjectId } = require('mongoose');
+import { Schema, model } from 'mongoose';
+
+// const { model, ObjectId } = require('mongoose');
 
 const File = new Schema<IFile>({
   name: { type: String, required: true },
   type: { type: String, required: true },
   accessLink: { type: String },
-  size: { type: Number, default: 0 },
-  path: { type: String, default: '' },
-  user: { type: ObjectId, ref: 'User' },
-  parent: { type: ObjectId, ref: 'File' },
-  childs: [{ type: ObjectId, ref: 'File' }],
+  size: { type: Number, required: true, default: 0 },
+  path: { type: String, default: '', required: true },
+  user: { type: String, required: true },
+  date: { type: Number, required: true },
+  parent: { type: String, required: true },
+  childs: [{ type: String }],
 });
 
-module.exports = model('File', File);
+const FileModel = model<IFile>('File', File);
+export default FileModel;

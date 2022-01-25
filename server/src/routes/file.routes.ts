@@ -1,15 +1,29 @@
-const Router = require('express');
-const authMiddleware = require('../middleware/auth.middleware');
-const fileController = require('../controllers/fileController');
+import { Router } from 'express';
+// const Router = require('express');
+import authMiddleware from '../middleware/auth.middleware';
+import FileController from '../controllers/fileController';
 
-const router = new Router();
+const router = Router();
 
-router.post('', authMiddleware, fileController.createDir);
-router.post('/upload', authMiddleware, fileController.uploadFile);
-router.post('/avatar', authMiddleware, fileController.uploadAvatar);
-router.get('', authMiddleware, fileController.getFiles);
-router.get('/download', authMiddleware, fileController.downloadFile);
-router.delete('/', authMiddleware, fileController.deleteFile);
-router.delete('/avatar', authMiddleware, fileController.deleteAvatar);
+router.post('', authMiddleware, FileController.createDir.bind(FileController));
+router.post(
+  '/upload',
+  authMiddleware,
+  FileController.uploadFile.bind(FileController)
+);
+router.post('/avatar', authMiddleware, FileController.uploadAvatar);
+router.post(
+  '/rename',
+  authMiddleware,
+  FileController.renameFile.bind(FileController)
+);
+router.get('', authMiddleware, FileController.getFiles);
+router.get('/download', authMiddleware, FileController.downloadFile);
+router.delete(
+  '/',
+  authMiddleware,
+  FileController.deleteFile.bind(FileController)
+);
+router.delete('/avatar', authMiddleware, FileController.deleteAvatar);
 
-module.exports = router;
+export default router;

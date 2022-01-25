@@ -3,26 +3,30 @@ export interface ObjectString {
 }
 
 export type stringOrNull = string | null;
+export type typeSort = 'Name' | 'Size' | 'Date' | 'Type';
 
 export interface IFile {
+  _id: string;
   name: string;
   type: string;
   accessLink: string;
   size: number;
   path: string;
-  user: IUser;
-  parent: IFile;
-  childs: IFile[];
+  user: string;
+  date: number;
+  parent: string;
+  childs: string[];
 }
 
 export interface IUser {
-  id: string;
+  _id: string;
   email: string;
   password: string;
   diskSpace: number;
   usedSpace: number;
   avatar?: string;
-  files: IFile[];
+  files: number;
+  folders: number;
 }
 
 export interface IDataLogin {
@@ -35,4 +39,11 @@ export interface IFileResponse {
   token: string;
   message: string;
   file: IFile;
+}
+
+export interface IFileComponents {
+  id: string;
+  type: string;
+  name: string;
+  parent: string;
 }

@@ -8,11 +8,11 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: 0;
+  z-index: 1000;
   background-color: rgba(0, 0, 0, 0.3);
 `;
 
-export const PageCenter: React.FC = ({ children, visible }) => {
+export const PageCenter: React.FC = ({ children }) => {
   return (
     <Wrapper>
       <Flex parentHeight justify={'center'} align={'center'}>
