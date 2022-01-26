@@ -7,6 +7,7 @@ import { SvgEdit } from '../elements/svg/svgEdit';
 import { SvgOpenFolder } from '../elements/svg/svgOpenFolder';
 import { SvgShare } from '../elements/svg/svgShare';
 import useApi from '../hooks/api.hook';
+import useMessage from '../hooks/message.hook';
 import useStoragePage from '../hooks/storagePage.hook';
 import { Prompt } from './Prompt';
 
@@ -77,6 +78,7 @@ const FilesButtons = styled(Button)<{ parentType: parentType }>`
 `;
 
 const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
+  const { setMessage } = useMessage();
   const [renamePromptVisible, setRenamePromptVisible] =
     useState<boolean>(false);
   const {
@@ -136,7 +138,16 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
         <SvgEdit />
       </FilesButtons>
 
-      <FilesButtons parentType={parentType} dark click={() => {}}>
+      <FilesButtons
+        parentType={parentType}
+        dark
+        click={async () => {
+          const link = await api!.file.shareFile(target.id);
+          navigator.clipboard.writeText(link).then(() => {
+            setMessage('link copied');
+          });
+        }}
+      >
         <SvgShare />
       </FilesButtons>
 

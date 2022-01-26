@@ -7,6 +7,8 @@ import config from 'config';
 import * as uuid from 'uuid';
 import File from '../models/File';
 import User from '../models/User';
+import Share from '../models/Share';
+import { IShare } from '../types/models/share';
 
 const FileController = {
   async renameFile(
@@ -22,17 +24,7 @@ const FileController = {
         return res.status(400).json({ message: 'Error rename' });
       }
 
-      // const oldPath = fileService.getPath(file);
-
       file.name = name;
-      // const pathArray = file.path.split('\\');
-      // const oldName = pathArray[pathArray.length - 1];
-      // pathArray[pathArray.length - 1] = name;
-      // file.path = pathArray.join('\\');
-
-      // fileService.rename(file, oldPath);
-      // await this.renamePathChild(file, oldName, name);
-
       await file.save();
 
       return res.json({ message: 'Success' });
@@ -40,6 +32,45 @@ const FileController = {
       console.log(e);
 
       return res.status(400).json({ message: 'Error rename' });
+    }
+  },
+
+  async shareFile(
+    req: express.Request,
+    res: express.Response
+  ): Promise<express.Response> {
+    try {
+      const { fileId } = req.body;
+      const file: IFile | null = await File.findOne({ _id: fileId });
+
+      if (!file) {
+        return res.status(400).json({ message: 'Error file' });
+      }
+
+      if (file.type === 'dir') {
+        return res.status(400).json({ message: `Can't share folder` });
+      }
+
+      if (file.accessLink) {
+        return res.json({ accessLink: file.accessLink });
+      }
+
+      const shareLink: IShare = new Share({
+        file: file._id,
+        user: req.user?.id,
+      });
+
+      file.accessLink =
+        config.get('urlBase') + '/api/share?id=' + shareLink._id;
+
+      await file.save();
+      await shareLink.save();
+
+      return res.json({ accessLink: file.accessLink });
+    } catch (e: any) {
+      console.log(e);
+
+      return res.status(400).json({ message: 'Error share file' });
     }
   },
 

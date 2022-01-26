@@ -14,6 +14,7 @@ interface IFiles {
   downloadFile(id: string, fileName: string): Promise<void>;
   deleteFile(id: string): Promise<void>;
   renameFile(name: string, id: string): Promise<void>;
+  shareFile(fileId: string): Promise<string>;
 }
 
 interface IApi {

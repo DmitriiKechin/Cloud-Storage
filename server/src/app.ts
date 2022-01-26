@@ -3,15 +3,8 @@ import config from 'config';
 import mongoose from 'mongoose';
 import authRouter from './routes/auth.routes';
 import fileRouter from './routes/file.routes';
+import shareRouter from './routes/share.routes';
 
-// import fileUpload from 'express-fileupload';
-
-// const express = require('express');
-// const config = require('config');
-// const mongoose = require('mongoose');
-// const authRouter = require('./routes/auth.routes');
-
-// const fileRouter = require('./routes/file.routes');
 const fileUpload = require('express-fileupload');
 
 const app = express();
@@ -22,6 +15,7 @@ app.use(express.json());
 app.use(express.static('./static'));
 app.use('/api/auth', authRouter);
 app.use('/api/files', fileRouter);
+app.use('/api/share', shareRouter);
 
 async function start(): Promise<void> {
   try {

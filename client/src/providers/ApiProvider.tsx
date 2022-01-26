@@ -161,6 +161,18 @@ const APIProvider: React.FC = ({ children }) => {
     [request]
   );
 
+  const shareFile = useCallback(
+    async (fileId: string): Promise<string> => {
+      const response = await request('/api/files/share', 'POST', { fileId });
+
+      if (!response?.accessLink) {
+        return '';
+      }
+
+      return response.accessLink;
+    },
+    [request]
+  );
   // useEffect(() => {
   //   console.log('request');
   // }, [request]);
@@ -180,6 +192,7 @@ const APIProvider: React.FC = ({ children }) => {
           downloadFile,
           uploadFile,
           renameFile,
+          shareFile,
         },
       }}
     >

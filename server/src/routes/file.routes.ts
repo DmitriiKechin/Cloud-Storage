@@ -12,6 +12,7 @@ router.post(
   FileController.uploadFile.bind(FileController)
 );
 router.post('/avatar', authMiddleware, FileController.uploadAvatar);
+router.post('/share', authMiddleware, FileController.shareFile);
 router.post(
   '/rename',
   authMiddleware,
