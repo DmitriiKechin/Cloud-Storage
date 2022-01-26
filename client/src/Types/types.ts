@@ -47,3 +47,8 @@ export interface IFileComponents {
   name: string;
   parent: string;
 }
+
+export interface ISettingUser {
+  currentFolder: string;
+  isTable?: boolean;
+}

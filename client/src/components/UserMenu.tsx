@@ -61,6 +61,7 @@ export const UserMenu: React.FC<IUserMenu> = ({
   const { loading, isSuccess } = useRequest();
 
   const logout = (): void => {
+    auth.setSettingUser(auth?.user?._id || '');
     auth.logout();
   };
 

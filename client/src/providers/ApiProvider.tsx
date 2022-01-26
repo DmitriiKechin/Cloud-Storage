@@ -18,7 +18,7 @@ type IMethod =
   | 'PATH';
 
 const APIProvider: React.FC = ({ children }) => {
-  const { token, isAuthorization, auth, logout } = useAuth();
+  const { token, isAuthorization, auth, logout, setSettingUser } = useAuth();
   const { setMessage } = useMessage();
   const { setLoading, setIsSuccess } = useRequest();
 
@@ -94,9 +94,10 @@ const APIProvider: React.FC = ({ children }) => {
         return [];
       }
 
+      setSettingUser(currentDir);
       return response.files;
     },
-    [logout, request]
+    [logout, request, setSettingUser]
   );
 
   const upLoadAvatar = useCallback(

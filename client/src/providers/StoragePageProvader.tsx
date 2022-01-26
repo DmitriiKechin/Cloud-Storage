@@ -1,11 +1,22 @@
 import { useState } from 'react';
-import { typeSort } from '../Types/types';
+import { ISettingUser, typeSort } from '../Types/types';
 import { StoragePageContext } from '../contex/StoragePageContext';
 import { useUserInfo } from '../hooks/userInfo.hook';
 
 const StoragePageProvider: React.FC = ({ children }) => {
   const userInfo = useUserInfo();
-  const [currentFolder, setCurrentFolder] = useState<string>(userInfo.id);
+
+  let settingDefault: ISettingUser | null = null;
+  const usersSettings = localStorage.getItem('usersSettings');
+
+  if (usersSettings) {
+    settingDefault = JSON.parse(usersSettings)[userInfo.id];
+  }
+
+  const [currentFolder, setCurrentFolder] = useState<string>(
+    settingDefault?.currentFolder || userInfo.id
+  );
+
   const [parentFolder, setParentFolder] = useState<string[]>([userInfo.id]);
 
   const [target, setTarget] = useState<{ id: string; parent: string }>({
@@ -21,7 +32,9 @@ const StoragePageProvider: React.FC = ({ children }) => {
   const [targetName, setTargetName] = useState<string>('Всего');
 
   const [typeSort, setTypeSort] = useState<typeSort>('Name');
-  const [isTable, setIsTable] = useState<boolean>(false);
+  const [isTable, setIsTable] = useState<boolean>(
+    settingDefault?.isTable || false
+  );
 
   const openFolderHandler = (id: string): void => {
     setCurrentFolder(id);

@@ -6,6 +6,7 @@ interface IAuth {
   login: { (token: string, user: IUser, isAuthorization: boolean): void };
   loading: boolean;
   logout: { (): void };
+  setSettingUser: { (currentFolder: string, isTable?: boolean): void };
   auth(token: string, isAuthorization: boolean): Promise<void>;
   token: stringOrNull;
   user: IUser | null;
@@ -19,6 +20,7 @@ const AuthContext = createContext<IAuth>({
   login: () => {},
   logout: () => {},
   auth: async () => {},
+  setSettingUser: () => {},
 });
 
 export default AuthContext;

@@ -39,6 +39,32 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem(storageName);
   }, []);
 
+  const setSettingUser = useCallback(
+    (currentFolder: string, isTable?: boolean): void => {
+      const user: IUser = JSON.parse(
+        localStorage.getItem(storageName) || 'null'
+      )?.user;
+      if (!user) {
+        return;
+      }
+      const usersSettings =
+        JSON.parse(localStorage.getItem('usersSettings') || 'null') || {};
+
+      if (!usersSettings[user._id]) {
+        usersSettings[user._id] = {};
+      }
+
+      usersSettings[user._id].currentFolder = currentFolder;
+
+      if (!(isTable === undefined)) {
+        usersSettings[user._id].isTable = isTable;
+      }
+
+      localStorage.setItem('usersSettings', JSON.stringify(usersSettings));
+    },
+    []
+  );
+
   const auth = useCallback(
     async (token: string, isAuthorization: boolean): Promise<void> => {
       const headers: ObjectString = {};
@@ -80,7 +106,7 @@ const AuthProvider: React.FC = ({ children }) => {
       }
       setLoading(false);
     })();
-  }, [auth]);
+  }, [auth, isAuthorization]);
 
   // useEffect(() => {
   //   console.log('auth');
@@ -95,8 +121,9 @@ const AuthProvider: React.FC = ({ children }) => {
       token,
       user,
       auth,
+      setSettingUser,
     }),
-    [login, logout, token, user, auth, loading, isAuthorization]
+    [login, logout, token, user, auth, loading, isAuthorization, setSettingUser]
   );
 
   return (
