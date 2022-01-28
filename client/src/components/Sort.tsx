@@ -136,7 +136,6 @@ export const Sort: React.FC<ISort> = () => {
 
   const TypeSortVisible = () => {
     setIsClicked(false);
-    console.log('jdhgj');
     document.body.removeEventListener('click', TypeSortVisible);
   };
 
@@ -159,7 +158,12 @@ export const Sort: React.FC<ISort> = () => {
           }, 0);
         }}
       >
-        <Flex align="center" justify="space-between" width="100%" height="100%">
+        <Flex
+          align="center"
+          justify="space-between"
+          width="100%"
+          height="2.3rem"
+        >
           <MenuItemCurrent>{typeSort}</MenuItemCurrent>
           <WrapperSvg>
             <SvgTriangleDown />

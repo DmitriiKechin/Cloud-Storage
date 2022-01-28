@@ -32,11 +32,11 @@ const Wrapper = styled.div`
     background-color: rgba(0, 0, 0, 0.1);
   }
 
-  &:focus {
+  /* &:focus {
     background-color: ${(props) => props.theme.colors.darkPrimary}99;
     box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.9);
     outline: none;
-  }
+  } */
 `;
 
 const Name = styled.div`
@@ -177,14 +177,18 @@ export const FileRow: React.FC<IFileRow> = ({
 
   return (
     <Wrapper
-      tabIndex={1}
-      onClick={() => {
-        setIsActive(true);
+      onClick={(event: React.MouseEvent) => {
+        if (isActive) {
+          event.stopPropagation();
+          document.body.removeEventListener('click', click);
+        }
         setTimeout(() => {
-          document.body.addEventListener('click', click);
+          setIsActive((prev) => !prev);
+          setTimeout(() => {
+            document.body.addEventListener('click', click);
+          }, 0);
         }, 0);
-      }}
-      onFocus={() => {
+
         setTarget({ id: _id, parent });
         setTargetType(type);
       }}
