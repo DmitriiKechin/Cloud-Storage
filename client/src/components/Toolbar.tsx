@@ -86,24 +86,29 @@ export const Toolbar: React.FC<IToolbar> = () => {
     setParentFolder,
     isTable,
     setIsTable,
+    setUploadedFiles,
+    uploadedFiles,
   } = useStoragePage();
 
   const createFolderHandler = (): void => {
     setCreateFolderPromptVisible(!createFolderPromptVisible);
   };
 
-  const uploadFile = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): Promise<void> => {
+  const uploadFile = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (!event.target.files) {
       return;
     }
+    let files = [...uploadedFiles];
 
-    const file: Blob = event.target.files[0];
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('parent', currentFolder);
-    await api!.file.uploadFile(formData);
+    [...event.target.files].forEach((file) => {
+      if (!files.filter((item) => item.name === file.name).length) {
+        files.push(file);
+      }
+    });
+
+    setUploadedFiles(files);
+
+    files = [];
   };
 
   const createFolder = async (nameFolder: string): Promise<void> => {
@@ -141,9 +146,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
           <FileLoad
             dark
             changeHandler={async (event) => {
-              await uploadFile(event);
-              openFolderHandler('');
-              openFolderHandler(currentFolder);
+              uploadFile(event);
             }}
           >
             <SvgAdd />

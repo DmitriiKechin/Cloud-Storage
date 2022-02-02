@@ -52,3 +52,8 @@ export interface ISettingUser {
   currentFolder: string;
   isTable?: boolean;
 }
+
+export interface ILoadedFile extends Blob {
+  name: string;
+  lastModified: number;
+}

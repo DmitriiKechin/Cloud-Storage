@@ -10,7 +10,11 @@ interface IFiles {
   getFiles(currentDir: string, typeSort: typeSort): Promise<IFile[]>;
   upLoadAvatar(data: FormData): Promise<void>;
   createDir(data: ObjectString): Promise<IFile>;
-  uploadFile(data: FormData): Promise<IFile>;
+  uploadFile(
+    data: FormData,
+    setProgress: React.Dispatch<React.SetStateAction<number>>,
+    callback: () => void
+  ): () => void;
   downloadFile(id: string, fileName: string): Promise<void>;
   deleteFile(id: string): Promise<void>;
   renameFile(name: string, id: string): Promise<void>;

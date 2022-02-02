@@ -112,10 +112,48 @@ const APIProvider: React.FC = ({ children }) => {
     [request]
   );
 
+  // const uploadFile = useCallback(
+  //   async (data: FormData): Promise<IFile> =>
+  //     await request('/api/files/upload', 'POST', data),
+  //   [request]
+  // );
+
   const uploadFile = useCallback(
-    async (data: FormData): Promise<IFile> =>
-      await request('/api/files/upload', 'POST', data),
-    [request]
+    (
+      data: FormData,
+      setProgress: React.Dispatch<React.SetStateAction<number>>,
+      callBack: () => void
+    ) => {
+      let xhr = new XMLHttpRequest();
+
+      xhr.responseType = 'json';
+
+      xhr.upload.onprogress = function (event) {
+        const progress: number = (100 * event.loaded) / event.total;
+        setProgress(progress);
+        //  console.log(
+        //   `Отправлено ${event.loaded} из ${event.total}`
+        // );
+      };
+
+      xhr.onloadend = () => {
+        callBack();
+        if (xhr.status > 299) {
+          setMessage(xhr.response?.message || 'Unknown error');
+        }
+        setMessage('');
+      };
+
+      xhr.open('POST', '/api/files/upload');
+      xhr.setRequestHeader('authorization', token || '');
+      xhr.send(data);
+
+      token && auth(token, isAuthorization);
+
+      const cancel = xhr.abort.bind(xhr);
+      return cancel;
+    },
+    [auth, isAuthorization, setMessage, token]
   );
 
   const downloadFile = useCallback(

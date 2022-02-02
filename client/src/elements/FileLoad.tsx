@@ -34,7 +34,12 @@ export const FileLoad: React.FC<IFileLoad> = ({
     <FileLoadElement>
       <LabelStyled {...props}>
         {children}
-        <InputStyled name="file" type="file" onChange={changeHandler} />
+        <InputStyled
+          name="file"
+          type="file"
+          multiple
+          onChange={changeHandler}
+        />
       </LabelStyled>
     </FileLoadElement>
   );

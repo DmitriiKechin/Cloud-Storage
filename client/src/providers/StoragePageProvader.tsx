@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ISettingUser, typeSort } from '../Types/types';
+import { ILoadedFile, ISettingUser, typeSort } from '../Types/types';
 import { StoragePageContext } from '../contex/StoragePageContext';
 import { useUserInfo } from '../hooks/userInfo.hook';
 
@@ -36,6 +36,8 @@ const StoragePageProvider: React.FC = ({ children }) => {
     settingDefault?.isTable || false
   );
 
+  const [uploadedFiles, setUploadedFiles] = useState<ILoadedFile[]>([]);
+
   const openFolderHandler = (id: string): void => {
     setCurrentFolder(id);
   };
@@ -63,6 +65,8 @@ const StoragePageProvider: React.FC = ({ children }) => {
         typeSort,
         isTable,
         setIsTable,
+        uploadedFiles,
+        setUploadedFiles,
       }}
     >
       {children}

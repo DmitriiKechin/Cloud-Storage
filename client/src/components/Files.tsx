@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useStoragePage from '../hooks/storagePage.hook';
 import FilesIcons from './FilesIcon';
 import { FilesTable } from './FilesTable';
+import { UploadManager } from './UploadManager';
 
 export const Files: React.FC = () => {
   const [update, setUpdate] = useState<boolean>(false);
@@ -26,6 +27,7 @@ export const Files: React.FC = () => {
       ) : (
         <FilesIcons update={update} />
       )}
+      <UploadManager />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { typeSort } from '../Types/types';
+import { ILoadedFile, typeSort } from '../Types/types';
 
 interface IStoragePageContext {
   parentFolder: string[];
@@ -27,6 +27,9 @@ interface IStoragePageContext {
 
   isTable: boolean;
   setIsTable: React.Dispatch<React.SetStateAction<boolean>>;
+
+  uploadedFiles: ILoadedFile[];
+  setUploadedFiles: React.Dispatch<React.SetStateAction<ILoadedFile[]>>;
 }
 
 export const StoragePageContext = createContext<IStoragePageContext>({
@@ -50,4 +53,6 @@ export const StoragePageContext = createContext<IStoragePageContext>({
   setTypeSort: () => {},
   isTable: false,
   setIsTable: () => {},
+  uploadedFiles: [],
+  setUploadedFiles: () => {},
 });
