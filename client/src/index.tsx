@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import { DefaultTheme } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
-import AuthProvider from './providers/AuthProveder';
+import AuthProvider from './providers/AuthProvider';
 import { AuthPage } from './pages/AuthPage';
 import { StoragePage } from './pages/StoragePage';
 import adaptiveSize from './global_Function/adaptiveSize';
