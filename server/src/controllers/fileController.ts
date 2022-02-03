@@ -303,6 +303,18 @@ const FileController = {
         user: req.user?.id,
       });
 
+      if (file.accessLink) {
+        const share = await Share.findOne({
+          file: file._id,
+        });
+
+        if (!share) {
+          return res.status(400).json({ message: 'error delete share link' });
+        }
+
+        await share.remove();
+      }
+
       await this.deleteFileChilds(file, user);
       fileService.deleteFile(file);
 
@@ -400,6 +412,17 @@ const FileController = {
       } else {
         user.files--;
       }
+
+      if (file.accessLink) {
+        const share = await Share.findOne({
+          file: file._id,
+        });
+
+        if (share) {
+          await share.remove();
+        }
+      }
+
       await file.remove();
       await this.deleteFileChilds(file, user);
     });
