@@ -6,7 +6,7 @@ import useAuth from './hooks/auth.hook';
 import { Loader } from './elements/loader';
 import { PageCenter } from './elements/PageCenter';
 import { Message } from './elements/Message';
-import MessageProvider from './providers/MessegeProveder';
+import MessageProvider from './providers/MessegeProvider';
 import RequestProvider from './providers/RequestProvider';
 import APIProvider from './providers/ApiProvider';
 

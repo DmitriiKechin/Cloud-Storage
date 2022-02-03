@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { Flex } from '../elements/Flex';
 import { SvgSort } from '../elements/svg/svgSort';
 import { SvgTriangleDown } from '../elements/svg/svgTriangleDown';
+import useAuth from '../hooks/auth.hook';
 import useStoragePage from '../hooks/storagePage.hook';
 import { typeSort } from '../Types/types';
 
@@ -133,6 +134,7 @@ const MenuItem = styled.div<{ isActive?: boolean; number: number }>`
 export const Sort: React.FC<ISort> = () => {
   const { typeSort, setTypeSort } = useStoragePage();
   const [isClicked, setIsClicked] = useState(false);
+  const { setSettingUser } = useAuth();
 
   const TypeSortVisible = () => {
     setIsClicked(false);
@@ -182,6 +184,7 @@ export const Sort: React.FC<ISort> = () => {
                   falseArray[index] = true;
                   setIsActive(falseArray);
                   setTypeSort(option);
+                  setSettingUser({ typeSort: option });
                 }}
               >
                 {option}

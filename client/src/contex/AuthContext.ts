@@ -1,12 +1,12 @@
 import { createContext } from 'react';
-import { IUser, stringOrNull } from '../Types/types';
+import { ISettingUser, IUser, stringOrNull } from '../Types/types';
 
 interface IAuth {
   isAuthorization: boolean;
   login: { (token: string, user: IUser, isAuthorization: boolean): void };
   loading: boolean;
   logout: { (): void };
-  setSettingUser: { (currentFolder: string, isTable?: boolean): void };
+  setSettingUser: { (settings: ISettingUser): void };
   auth(token: string, isAuthorization: boolean): Promise<void>;
   token: stringOrNull;
   user: IUser | null;

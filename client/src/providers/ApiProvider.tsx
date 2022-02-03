@@ -94,7 +94,7 @@ const APIProvider: React.FC = ({ children }) => {
         return [];
       }
 
-      setSettingUser(currentDir);
+      setSettingUser({ currentFolder: currentDir });
       return response.files;
     },
     [logout, request, setSettingUser]

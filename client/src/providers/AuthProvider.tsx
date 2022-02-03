@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import AuthContext from '../contex/AuthContext';
 import useMessage from '../hooks/message.hook';
-import { IDataLogin, IUser, ObjectString, stringOrNull } from '../Types/types';
+import {
+  IDataLogin,
+  ISettingUser,
+  IUser,
+  ObjectString,
+  stringOrNull,
+} from '../Types/types';
 
 const storageName: string = 'userData';
 
@@ -39,31 +45,24 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem(storageName);
   }, []);
 
-  const setSettingUser = useCallback(
-    (currentFolder: string, isTable?: boolean): void => {
-      const user: IUser = JSON.parse(
-        localStorage.getItem(storageName) || 'null'
-      )?.user;
-      if (!user) {
-        return;
-      }
-      const usersSettings =
-        JSON.parse(localStorage.getItem('usersSettings') || 'null') || {};
+  const setSettingUser = useCallback((settings: ISettingUser): void => {
+    const user: IUser = JSON.parse(
+      localStorage.getItem(storageName) || 'null'
+    )?.user;
+    if (!user) {
+      return;
+    }
+    const usersSettings =
+      JSON.parse(localStorage.getItem('usersSettings') || 'null') || {};
 
-      if (!usersSettings[user._id]) {
-        usersSettings[user._id] = {};
-      }
+    if (!usersSettings[user._id]) {
+      usersSettings[user._id] = {};
+    }
 
-      usersSettings[user._id].currentFolder = currentFolder;
+    usersSettings[user._id] = { ...usersSettings[user._id], ...settings };
 
-      if (!(isTable === undefined)) {
-        usersSettings[user._id].isTable = isTable;
-      }
-
-      localStorage.setItem('usersSettings', JSON.stringify(usersSettings));
-    },
-    []
-  );
+    localStorage.setItem('usersSettings', JSON.stringify(usersSettings));
+  }, []);
 
   const auth = useCallback(
     async (token: string, isAuthorization: boolean): Promise<void> => {

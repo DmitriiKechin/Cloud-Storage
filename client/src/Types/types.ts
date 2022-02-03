@@ -49,8 +49,9 @@ export interface IFileComponents {
 }
 
 export interface ISettingUser {
-  currentFolder: string;
+  currentFolder?: string;
   isTable?: boolean;
+  typeSort?: typeSort;
 }
 
 export interface ILoadedFile extends Blob {

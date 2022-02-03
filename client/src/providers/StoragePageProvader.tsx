@@ -31,7 +31,9 @@ const StoragePageProvider: React.FC = ({ children }) => {
   const [targetType, setTargetType] = useState<string>('');
   const [targetName, setTargetName] = useState<string>('Всего');
 
-  const [typeSort, setTypeSort] = useState<typeSort>('Name');
+  const [typeSort, setTypeSort] = useState<typeSort>(
+    settingDefault?.typeSort || 'Name'
+  );
   const [isTable, setIsTable] = useState<boolean>(
     settingDefault?.isTable || false
   );

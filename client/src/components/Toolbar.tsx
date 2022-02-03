@@ -157,7 +157,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
           <Button
             dark
             click={() => {
-              setSettingUser(currentFolder, !isTable);
+              setSettingUser({ currentFolder, isTable: !isTable });
               setIsTable((prev) => !prev);
             }}
           >
