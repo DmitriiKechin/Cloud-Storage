@@ -89,7 +89,7 @@ const InputElement = styled.input`
   padding: 0.5rem;
   display: block;
   width: 100%;
-  border: 0.1rem solid ${(props) => props.theme.colors.darkPrimary};
+  border: 3px solid ${(props) => props.theme.colors.darkPrimary};
   border-radius: 3rem;
   background-color: transparent;
   color: ${(props) => props.theme.colors.lightPrimary};
@@ -99,7 +99,7 @@ const InputElement = styled.input`
 
   &:focus {
     outline: none;
-    border: 0.1rem solid ${(props) => props.theme.colors.lightPrimary};
+    border: 3px solid ${(props) => props.theme.colors.lightPrimary};
     transition: border-bottom 0.1s 0.15s, border-left 0.1s 0.2s,
       border-right 0.1s 0.2s, border-top 0.1s 0.15s;
   }
