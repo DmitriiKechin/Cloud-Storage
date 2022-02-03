@@ -98,6 +98,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
     if (!event.target.files) {
       return;
     }
+
     let files = [...uploadedFiles];
 
     [...event.target.files].forEach((file) => {
@@ -157,7 +158,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
           <Button
             dark
             click={() => {
-              setSettingUser({ currentFolder, isTable: !isTable });
+              setSettingUser({ isTable: !isTable });
               setIsTable((prev) => !prev);
             }}
           >

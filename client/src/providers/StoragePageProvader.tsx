@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ILoadedFile, ISettingUser, typeSort } from '../Types/types';
 import { StoragePageContext } from '../contex/StoragePageContext';
 import { useUserInfo } from '../hooks/userInfo.hook';
@@ -44,33 +44,47 @@ const StoragePageProvider: React.FC = ({ children }) => {
     setCurrentFolder(id);
   };
 
+  const contextValue = useMemo(
+    () => ({
+      parentFolder,
+      setParentFolder,
+      currentFolder,
+      openFolderHandler,
+      target,
+      setTarget,
+      setTargetCountFiles,
+      setTargetDate,
+      setTargetSize,
+      targetCountFiles,
+      targetDate,
+      targetSize,
+      setTargetType,
+      targetType,
+      targetName,
+      setTargetName,
+      setTypeSort,
+      typeSort,
+      isTable,
+      setIsTable,
+      uploadedFiles,
+      setUploadedFiles,
+    }),
+    [
+      currentFolder,
+      isTable,
+      parentFolder,
+      target,
+      targetCountFiles,
+      targetDate,
+      targetName,
+      targetSize,
+      targetType,
+      typeSort,
+      uploadedFiles,
+    ]
+  );
   return (
-    <StoragePageContext.Provider
-      value={{
-        parentFolder,
-        setParentFolder,
-        currentFolder,
-        openFolderHandler,
-        target,
-        setTarget,
-        setTargetCountFiles,
-        setTargetDate,
-        setTargetSize,
-        targetCountFiles,
-        targetDate,
-        targetSize,
-        setTargetType,
-        targetType,
-        targetName,
-        setTargetName,
-        setTypeSort,
-        typeSort,
-        isTable,
-        setIsTable,
-        uploadedFiles,
-        setUploadedFiles,
-      }}
-    >
+    <StoragePageContext.Provider value={contextValue}>
       {children}
     </StoragePageContext.Provider>
   );

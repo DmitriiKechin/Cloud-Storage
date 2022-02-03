@@ -107,10 +107,6 @@ const AuthProvider: React.FC = ({ children }) => {
     })();
   }, [auth, isAuthorization]);
 
-  // useEffect(() => {
-  //   console.log('auth');
-  // }, [auth]);
-
   const contextValue = useMemo(
     () => ({
       isAuthorization,

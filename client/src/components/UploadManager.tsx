@@ -58,16 +58,19 @@ const Wrapper = styled.div<{ visible: boolean }>`
 interface IUploadManager {}
 
 export const UploadManager: React.FC<IUploadManager> = () => {
-  const { uploadedFiles, setUploadedFiles } = useStoragePage();
+  const { uploadedFiles, setUploadedFiles, openFolderHandler, currentFolder } =
+    useStoragePage();
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (uploadedFiles.length === 0) {
       setIsVisible(false);
+      openFolderHandler('');
+      openFolderHandler(currentFolder);
     } else {
       setIsVisible(true);
     }
-  }, [setUploadedFiles, uploadedFiles.length]);
+  }, [setUploadedFiles, uploadedFiles.length]); //иначе много перевызовов
 
   const getFiles = useMemo(() => {
     return uploadedFiles.map((file) => {
