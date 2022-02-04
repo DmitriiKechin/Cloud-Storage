@@ -66,7 +66,9 @@ export const UploadManager: React.FC<IUploadManager> = () => {
     if (uploadedFiles.length === 0) {
       setIsVisible(false);
       openFolderHandler('');
-      openFolderHandler(currentFolder);
+      setTimeout(() => {
+        openFolderHandler(currentFolder);
+      }, 0);
     } else {
       setIsVisible(true);
     }
