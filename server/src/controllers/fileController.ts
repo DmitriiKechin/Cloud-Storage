@@ -179,17 +179,18 @@ const FileController = {
   ): Promise<express.Response> {
     try {
       const file = req.files.file;
-      // const file = req.files.file;
 
       if (!file) {
         return res.status(500).json({ message: 'Upload error/not file' });
       }
 
-      const parent = await File.findOne({
-        user: req.user?.id,
-        _id: req.body.parent,
-      });
-      const user: IUser | null = await User.findOne({ _id: req.user?.id });
+      const [parent, user] = await Promise.all([
+        File.findOne({
+          user: req.user?.id,
+          _id: req.body.parent,
+        }),
+        User.findOne({ _id: req.user?.id }),
+      ]);
 
       if (!user) {
         return res.status(500).json({ message: 'Upload error/ User Error ' });
@@ -202,6 +203,7 @@ const FileController = {
       user.usedSpace = user.usedSpace + file.size;
       user.files++;
 
+      await parent;
       let path;
       if (parent) {
         path = `${config.get('filePath')}\\${user._id}\\${parent.path}\\${
@@ -214,8 +216,6 @@ const FileController = {
       if (fs.existsSync(path)) {
         return res.status(400).json({ message: 'File already exist' });
       }
-
-      file.mv(path);
 
       const type: string = file.name.split('.').pop();
       let filePath: string = file.name;
@@ -239,10 +239,13 @@ const FileController = {
         await parent.save();
       }
 
-      await this.resizeParent(dbFile, user, dbFile.size);
+      await Promise.all([
+        this.resizeParent(dbFile, user, dbFile.size),
+        dbFile.save(),
+        user.save(),
+      ]);
 
-      await dbFile.save();
-      await user.save();
+      file.mv(path);
 
       return res.json(dbFile);
     } catch (e: any) {
@@ -443,7 +446,7 @@ const FileController = {
     }
 
     parent.size += resize;
-    await parent.save();
+    parent.save();
 
     this.resizeParent(parent, user, resize);
   },
