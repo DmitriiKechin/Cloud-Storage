@@ -3,4 +3,5 @@ static/**
 !static/UserDefault.svg
 public
 build
+.env
 
