@@ -1,6 +1,7 @@
 node_modules
 static/**
 !static/UserDefault.svg
+!static/download.html
 public
 build
 .env

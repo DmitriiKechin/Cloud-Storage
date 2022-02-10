@@ -64,16 +64,19 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
   }, [file.lastModified, file.name, file.size, setUploadedFiles]);
 
   useEffect(() => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('parent', currentFolder);
+    (async () => {
+      const formData = new FormData();
+      console.log('file', file);
+      formData.append('file', file);
+      formData.append('parent', currentFolder);
 
-    clear.current = api!.file.uploadFile(formData, setProgress, () => {
-      deleteUploadedFile();
-      setIsVisible(false);
-    });
+      clear.current = await api!.file.uploadFile(formData, setProgress, () => {
+        deleteUploadedFile();
+        setIsVisible(false);
+      });
 
-    setIsVisible(true);
+      setIsVisible(true);
+    })();
   }, []);
 
   useEffect(() => {

@@ -1,7 +1,10 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-// const config = require('config');
+import dotenv from 'dotenv';
+
+dotenv.config();
+const secretPhrase = process.env.JWT_SECRET || '';
 
 const authMiddleware = (
   req: express.Request,
@@ -18,7 +21,7 @@ const authMiddleware = (
     if (!token) {
       return res.status(401).json({ message: 'Auth error' });
     }
-    const decoded: any = jwt.verify(token, config.get('jwtSecret'));
+    const decoded: any = jwt.verify(token, secretPhrase);
 
     req.user = decoded;
     next();

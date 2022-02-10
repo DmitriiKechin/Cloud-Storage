@@ -1,5 +1,4 @@
 import { Router } from 'express';
-// const Router = require('express');
 import authMiddleware from '../middleware/auth.middleware';
 import FileController from '../controllers/fileController';
 

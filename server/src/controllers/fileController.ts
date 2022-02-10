@@ -9,6 +9,8 @@ import File from '../models/File';
 import User from '../models/User';
 import Share from '../models/Share';
 import { IShare } from '../types/models/share';
+import * as yandexDisk from '../yandexDisk';
+import path from 'path';
 
 const FileController = {
   async renameFile(
@@ -100,7 +102,8 @@ const FileController = {
       }
 
       if (parentFile) {
-        file.path = `${parentFile.path}\\${file.name}`;
+        // file.path = `${parentFile.path}\\${file.name}`;
+        file.path = `${parentFile.path}/${file.name}`;
         parentFile.childs.push(file._id);
         await parentFile.save();
       }
@@ -108,8 +111,7 @@ const FileController = {
       user.folders++;
 
       await fileService.createDir(file);
-      await file.save();
-      await user.save();
+      await Promise.all([file.save(), user.save()]);
 
       return res.json(file);
     } catch (e: any) {
@@ -178,11 +180,8 @@ const FileController = {
     res: express.Response
   ): Promise<express.Response> {
     try {
-      const file = req.files.file;
-
-      if (!file) {
-        return res.status(500).json({ message: 'Upload error/not file' });
-      }
+      const { name } = req.body;
+      const size = +req.body.size;
 
       const [parent, user] = await Promise.all([
         File.findOne({
@@ -196,39 +195,52 @@ const FileController = {
         return res.status(500).json({ message: 'Upload error/ User Error ' });
       }
 
-      if (user.usedSpace + file.size > user.diskSpace) {
+      if (user.usedSpace + size > user.diskSpace) {
         return res.status(400).json({ message: 'There no space on the disk' });
       }
 
-      user.usedSpace = user.usedSpace + file.size;
+      user.usedSpace = user.usedSpace + size;
       user.files++;
 
-      await parent;
       let path;
+      // if (parent) {
+      //   path = `${config.get('filePath')}\\${user._id}\\${
+      //     parent.path
+      //   }\\${name}`;
+      // } else {
+      //   path = `${config.get('filePath')}\\${user._id}\\${name}`;
+      // }
+
       if (parent) {
-        path = `${config.get('filePath')}\\${user._id}\\${parent.path}\\${
-          file.name
-        }`;
+        path = `${config.get('filePath')}/${user._id}/${parent.path}/${name}`;
       } else {
-        path = `${config.get('filePath')}\\${user._id}\\${file.name}`;
+        path = `${config.get('filePath')}/${user._id}/${name}`;
       }
 
-      if (fs.existsSync(path)) {
-        return res.status(400).json({ message: 'File already exist' });
-      }
+      const link = await yandexDisk.getUplodLink(path);
 
-      const type: string = file.name.split('.').pop();
-      let filePath: string = file.name;
+      const type: string = name.split('.').pop();
+      let filePath: string = name;
 
       if (parent) {
-        filePath = parent.path + '\\' + file.name;
+        // filePath = parent.path + '\\' + name;
+        filePath = parent.path + '/' + name;
+      }
+
+      const isExistsFile = await File.findOne({
+        user: req.user?.id,
+        path: filePath,
+      });
+
+      if (isExistsFile) {
+        return res.status(500).json({ message: 'file already exists' });
       }
 
       const dbFile: IFile = new File({
-        name: file.name,
+        name: name,
         type,
         date: Date.now(),
-        size: file.size,
+        size: size,
         path: filePath,
         parent: parent?._id || user._id,
         user: user._id,
@@ -245,14 +257,92 @@ const FileController = {
         user.save(),
       ]);
 
-      file.mv(path);
-
-      return res.json(dbFile);
+      return res.json({ href: link });
     } catch (e: any) {
       console.log(e);
       return res.status(500).json({ message: 'Upload error' });
     }
   },
+
+  // async uploadFile(
+  //   req: express.Request,
+  //   res: express.Response
+  // ): Promise<express.Response> {
+  //   try {
+  //     const file = req.files.file;
+
+  //     if (!file) {
+  //       return res.status(500).json({ message: 'Upload error/not file' });
+  //     }
+
+  //     const [parent, user] = await Promise.all([
+  //       File.findOne({
+  //         user: req.user?.id,
+  //         _id: req.body.parent,
+  //       }),
+  //       User.findOne({ _id: req.user?.id }),
+  //     ]);
+
+  //     if (!user) {
+  //       return res.status(500).json({ message: 'Upload error/ User Error ' });
+  //     }
+
+  //     if (user.usedSpace + file.size > user.diskSpace) {
+  //       return res.status(400).json({ message: 'There no space on the disk' });
+  //     }
+
+  //     user.usedSpace = user.usedSpace + file.size;
+  //     user.files++;
+
+  //     let path;
+  //     if (parent) {
+  //       path = `${config.get('filePath')}\\${user._id}\\${parent.path}\\${
+  //         file.name
+  //       }`;
+  //     } else {
+  //       path = `${config.get('filePath')}\\${user._id}\\${file.name}`;
+  //     }
+
+  //     if (fs.existsSync(path)) {
+  //       return res.status(400).json({ message: 'File already exist' });
+  //     }
+
+  //     const type: string = file.name.split('.').pop();
+  //     let filePath: string = file.name;
+
+  //     if (parent) {
+  //       filePath = parent.path + '\\' + file.name;
+  //     }
+
+  //     const dbFile: IFile = new File({
+  //       name: file.name,
+  //       type,
+  //       date: Date.now(),
+  //       size: file.size,
+  //       path: filePath,
+  //       parent: parent?._id || user._id,
+  //       user: user._id,
+  //     });
+
+  //     if (parent) {
+  //       parent.childs.push(dbFile._id);
+  //       await parent.save();
+  //     }
+
+  //     await Promise.all([
+  //       this.resizeParent(dbFile, user, dbFile.size),
+  //       dbFile.save(),
+  //       user.save(),
+  //     ]);
+
+  //     file.mv(path);
+
+  //      return res.json(dbFile);
+  //     } catch (e: any) {
+  //     console.log(e);
+  //     return res.status(500).json({ message: 'Upload error' });
+  //   }
+  // },
 
   async downloadFile(
     req: express.Request,
@@ -269,12 +359,16 @@ const FileController = {
       }
 
       const path: string =
-        config.get('filePath') + '\\' + req.user?.id + '\\' + file.path;
+        // config.get('filePath') + '\\' + req.user?.id + '\\' + file.path;
+        config.get('filePath') + '/' + req.user?.id + '/' + file.path;
 
-      if (fs.existsSync(path)) {
-        return res.download(path, file.name);
-      }
-      return res.status(400).json({ message: 'Download error' });
+      // if (!fs.existsSync(path)) { //!раскоментировать для работы без AWS S3
+      //   return res.status(400).json({ message: 'Download error' });
+      // }
+
+      //return res.download(path, file.name);
+      const url = await yandexDisk.getDownloadLink(path);
+      return res.json({ href: url, name: file.name });
     } catch (e: any) {
       console.log(e);
       res.status(500).json({ message: 'Download error' });
@@ -360,12 +454,14 @@ const FileController = {
       }
 
       if (user.avatar) {
-        fs.unlinkSync(config.get('staticPath') + '\\' + user.avatar);
+        fs.unlinkSync(
+          path.join(__dirname, '../../../static') + '\\' + user.avatar
+        );
       }
 
       const avatarName = uuid.v4() + '.jpg';
 
-      file.mv(config.get('staticPath') + '\\' + avatarName);
+      file.mv(path.join(__dirname, '../../../static') + '\\' + avatarName);
       user.avatar = avatarName;
       await user.save();
 
@@ -389,7 +485,9 @@ const FileController = {
           .json({ message: 'Upload avatar error/User error' });
       }
 
-      fs.unlinkSync(config.get('staticPath') + '\\' + user.avatar);
+      fs.unlinkSync(
+        path.join(__dirname, '../../../static') + '\\' + user.avatar
+      );
       user.avatar = '';
       await user.save();
       return res.json(user);

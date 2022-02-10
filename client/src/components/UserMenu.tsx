@@ -39,8 +39,8 @@ interface IUserMenu {
   closeHandler: { (): void };
   avatarSrc: string;
   userName: string;
-  diskSpace: number;
-  freeSpace: number;
+  diskSpace: string;
+  freeSpace: string;
   usedSpace: string;
   countFiles: number;
   countFolders: number;
@@ -123,7 +123,7 @@ export const UserMenu: React.FC<IUserMenu> = ({
             width="100%"
           >
             <Text>Размер диска</Text>
-            <Text>{diskSpace} Гб</Text>
+            <Text>{diskSpace}</Text>
           </Flex>
 
           <Flex
@@ -143,7 +143,7 @@ export const UserMenu: React.FC<IUserMenu> = ({
             width="100%"
           >
             <Text>Свободно</Text>
-            <Text>{freeSpace} Гб</Text>
+            <Text>{freeSpace}</Text>
           </Flex>
 
           <Flex
