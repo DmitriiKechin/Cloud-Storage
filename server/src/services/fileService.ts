@@ -1,8 +1,8 @@
-import { IFile } from '../types/models/file';
 // import fs from 'fs';
 import * as fs from 'fs-extra';
 import config from 'config';
 import * as yandexDisk from '../yandexDisk';
+import { IFile } from '../types/types';
 
 const FileService = {
   createDir(file: IFile) {

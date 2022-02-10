@@ -1,6 +1,4 @@
-import { IFile } from '../types/models/file';
 import express from 'express';
-import { IUser } from '../types/models/user';
 import fileService from '../services/fileService';
 import fs from 'fs';
 import config from 'config';
@@ -8,9 +6,9 @@ import * as uuid from 'uuid';
 import File from '../models/File';
 import User from '../models/User';
 import Share from '../models/Share';
-import { IShare } from '../types/models/share';
 import * as yandexDisk from '../yandexDisk';
 import path from 'path';
+import { IFile, IShare, IUser } from '../types/types';
 
 const FileController = {
   async renameFile(

@@ -3,9 +3,9 @@ import fs from 'fs';
 import config from 'config';
 import File from '../models/File';
 import Share from '../models/Share';
-import { IShare } from '../types/models/share';
 import * as yandexDisk from '../yandexDisk';
 import path1 from 'path';
+import { IShare } from '../types/types';
 
 class ShareController {
   static linkDownload = '';

@@ -1,5 +1,5 @@
-import { IFile } from '../types/models/file';
 import { Schema, model } from 'mongoose';
+import { IFile } from '../types/types';
 
 // const { model, ObjectId } = require('mongoose');
 

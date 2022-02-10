@@ -1,16 +1,13 @@
 import express from 'express';
-import { IUser } from '../types/models/user';
-import { ILoginResponse } from '../types/response/login';
-import { IRegistrationResponse } from '../types/response/registration';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
-import config from 'config';
 import { check, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import authMiddleware from '../middleware/auth.middleware';
 import FileService from '../services/fileService';
 import File from '../models/File';
 import dotenv from 'dotenv';
+import { ILoginResponse, IUser } from '../types/types';
 
 dotenv.config();
 const secretPhrase = process.env.JWT_SECRET || '';
