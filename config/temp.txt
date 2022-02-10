@@ -1,1 +1,2 @@
  "filePath": "C:\\WEB\\2021\\Cloud Storage\\files",
+ && npm run build --prefix client 
