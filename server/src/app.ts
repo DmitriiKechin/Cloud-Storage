@@ -1,6 +1,6 @@
 import express from 'express';
 //import config from 'config';
-import mongoose from 'mongoose';
+import * as mongoose from 'mongoose';
 import authRouter from './routes/auth.routes';
 import fileRouter from './routes/file.routes';
 import shareRouter from './routes/share.routes';
