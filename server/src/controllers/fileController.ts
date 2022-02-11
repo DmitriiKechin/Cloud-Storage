@@ -452,14 +452,18 @@ const FileController = {
       }
 
       if (user.avatar) {
-        fs.unlinkSync(
-          path.join(__dirname, '../../../static') + '\\' + user.avatar
-        );
+        const pathAvatar =
+          path.join(__dirname, '../../../static') + '/' + user.avatar;
+        // path.join(__dirname, '../../../static') + '\\' + user.avatar;
+        if (fs.existsSync(pathAvatar)) {
+          fs.unlinkSync(pathAvatar);
+        }
       }
 
       const avatarName = uuid.v4() + '.jpg';
 
-      file.mv(path.join(__dirname, '../../../static') + '\\' + avatarName);
+      file.mv(path.join(__dirname, '../../../static') + '/' + avatarName);
+      // file.mv(path.join(__dirname, '../../../static') + '\\' + avatarName);
       user.avatar = avatarName;
       await user.save();
 

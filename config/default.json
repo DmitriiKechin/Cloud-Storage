@@ -1,4 +1,4 @@
 {
   "filePath": "disk:/DIMITRIUS_STORAGE/files",
-  "urlBase": "http://localhost:5000"
+  "urlBase": "https://dimitrius-storage.herokuapp.com"
 }
