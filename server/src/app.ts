@@ -1,6 +1,6 @@
 import express from 'express';
 //import config from 'config';
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import authRouter from './routes/auth.routes';
 import fileRouter from './routes/file.routes';
 import shareRouter from './routes/share.routes';
@@ -14,10 +14,6 @@ const fileUpload = require('express-fileupload');
 const app = express();
 const PORT: string | number = process.env.PORT || 5000;
 
-console.log('Port-->', PORT);
-console.log('NODE_ENV: ', process.env.NODE_ENV);
-console.log('Mongo: ', !!process.env.MONGO_URL);
-
 app.use(fileUpload());
 app.use(express.json());
 app.use(express.static('./static'));
@@ -27,6 +23,7 @@ app.use('/api/share', shareRouter);
 
 if (process.env.NODE_ENV === 'production') {
   // app.use('/', express.static(path.join(__dirname, '../../client', 'build')));
+  console.log('NODE_ENV');
   app.get('*', (req, res) => {
     res.sendFile(
       path.resolve(__dirname, '../../../static', 'build', 'index.html')
@@ -37,6 +34,7 @@ if (process.env.NODE_ENV === 'production') {
 async function start(): Promise<void> {
   try {
     await mongoose.connect(process.env.MONGO_URL || '');
+
     app.listen(PORT, () =>
       console.log(`App has been started on port --> ${PORT}...`)
     );
