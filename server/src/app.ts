@@ -37,7 +37,7 @@ async function start(): Promise<void> {
       console.log(`App has been started on port --> ${PORT}...`)
     );
   } catch (e: any) {
-    console.log('server Error', e.messsage);
+    console.log('server Error :-(', e.messsage);
     process.exit(1);
   }
 }
