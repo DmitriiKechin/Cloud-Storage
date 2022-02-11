@@ -22,11 +22,10 @@ app.use('/api/files', fileRouter);
 app.use('/api/share', shareRouter);
 
 if (process.env.NODE_ENV === 'production') {
-  // app.use('/', express.static(path.join(__dirname, '../../client', 'build')));
-  console.log('NODE_ENV');
+  app.use('/', express.static(path.join(__dirname, '../../client', 'build')));
   app.get('*', (req, res) => {
     res.sendFile(
-      path.resolve(__dirname, '../../../static', 'build', 'index.html')
+      path.resolve(__dirname, '../../static', 'build', 'index.html')
     );
   });
 }
