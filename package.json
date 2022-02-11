@@ -5,7 +5,7 @@
   "main": "server/build/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "build && npm install --prefix client",
+    "postinstall": "tsc && npm install --prefix client",
     "build": "tsc",
     "start": "node server/build/app.js",
     "server": "nodemon --exec ts-node ./server/src/app.ts",
