@@ -1,4 +1,4 @@
-import { IUser } from '../models/user';
+import { IUser } from '../types';
 
 //import { Exspress } from 'express';
 
