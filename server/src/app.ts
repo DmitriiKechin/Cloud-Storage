@@ -14,6 +14,10 @@ const fileUpload = require('express-fileupload');
 const app = express();
 const PORT: string | number = process.env.PORT || 5000;
 
+console.log('Port-->', PORT);
+console.log('NODE_ENV: ', process.env.NODE_ENV);
+console.log('Mongo: ', !!process.env.MONGO_URL);
+
 app.use(fileUpload());
 app.use(express.json());
 app.use(express.static('./static'));
