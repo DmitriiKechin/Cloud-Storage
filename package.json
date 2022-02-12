@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "tsc && npm install --prefix client",
-    "start-dev": "tsc && npm run start",
+    "start-dev": "tsc && npm run build --prefix client && npm run start",
     "start": "node server/build/app.js",
     "server": "nodemon --exec ts-node ./server/src/app.ts",
     "client": "npm run start --prefix client",

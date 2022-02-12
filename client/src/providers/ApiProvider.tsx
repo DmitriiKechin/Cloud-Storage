@@ -112,23 +112,11 @@ const APIProvider: React.FC = ({ children }) => {
   );
 
   const uploadFile = useCallback(
-    async (
+    (
       data: FormData,
       setProgress: React.Dispatch<React.SetStateAction<number>>,
       callBack: () => void
     ) => {
-      const file: any = data.get('file');
-      const dataServer = {
-        size: file.size.toString(),
-        name: file.name,
-        parent: data.get('parent')?.toString() || '',
-      };
-      const url = await request('/api/files/upload', 'POST', dataServer);
-
-      if (!url) {
-        return () => {};
-      }
-
       let xhr = new XMLHttpRequest();
 
       xhr.responseType = 'json';
@@ -146,15 +134,9 @@ const APIProvider: React.FC = ({ children }) => {
         setMessage('');
       };
 
-      const dataYandex = new FormData();
-      dataYandex.append('file', file);
-      console.log('url', url);
-      xhr.open('PUT', url.href);
-      xhr.send(dataYandex);
-
-      // xhr.open('POST', '/api/files/upload');
-      // xhr.setRequestHeader('authorization', token || '');
-      // xhr.send(data);
+      xhr.open('POST', '/api/files/upload');
+      xhr.setRequestHeader('authorization', token || '');
+      xhr.send(data);
 
       token && auth(token, isAuthorization);
 
@@ -174,19 +156,11 @@ const APIProvider: React.FC = ({ children }) => {
         });
 
         if (response.status === 200) {
-          // const blob = await response.blob();
-          // const downloadUrl = window.URL.createObjectURL(blob);
-          // const link = document.createElement('a');
-          // link.href = downloadUrl;
-          // link.download = fileName;
-          // document.body.appendChild(link);
-          // link.click();
-          // link.remove();
-          const file = await response.json();
-          console.log('file: ', file);
+          const blob = await response.blob();
+          const downloadUrl = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
-          link.href = file.href;
-          link.download = file.name;
+          link.href = downloadUrl;
+          link.download = fileName;
           document.body.appendChild(link);
           link.click();
           link.remove();
@@ -227,9 +201,6 @@ const APIProvider: React.FC = ({ children }) => {
     },
     [request]
   );
-  // useEffect(() => {
-  //   console.log('request');
-  // }, [request]);
 
   return (
     <APIContext.Provider

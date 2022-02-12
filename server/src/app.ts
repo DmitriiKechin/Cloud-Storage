@@ -1,5 +1,4 @@
 import express from 'express';
-//import config from 'config';
 import mongoose from 'mongoose';
 import authRouter from './routes/auth.routes';
 import fileRouter from './routes/file.routes';
