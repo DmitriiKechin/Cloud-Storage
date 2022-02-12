@@ -21,23 +21,24 @@ app.use('/api/auth', authRouter);
 app.use('/api/files', fileRouter);
 app.use('/api/share', shareRouter);
 
-// if (process.env.NODE_ENV === 'production') {
-//   app.use('/', express.static(path.join(__dirname, '../../client', 'build')));
-//   app.get('*', (req, res) => {
-//     res.sendFile(
-//       path.resolve(__dirname, '../../client', 'build', 'index.html')
-//     );
-//   });
-// }
+if (process.env.NODE_ENV === 'production') {
+  app.use('/', express.static(path.join(__dirname, '../../client', 'build')));
+  app.get('*', (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, '../../client', 'build', 'index.html')
+    );
+  });
+}
 
 async function start(): Promise<void> {
   try {
     await mongoose.connect(process.env.MONGO_URL || '');
+
     app.listen(PORT, () =>
       console.log(`App has been started on port --> ${PORT}...`)
     );
   } catch (e: any) {
-    console.log('server Error', e.messsage);
+    console.log('server Error :-(', e.messsage);
     process.exit(1);
   }
 }
