@@ -100,7 +100,6 @@ const FileController = {
       }
 
       if (parentFile) {
-        // file.path = `${parentFile.path}\\${file.name}`;
         file.path = `${parentFile.path}/${file.name}`;
         parentFile.childs.push(file._id);
         await parentFile.save();
@@ -201,13 +200,6 @@ const FileController = {
       user.files++;
 
       let path;
-      // if (parent) {
-      //   path = `${config.get('filePath')}\\${user._id}\\${
-      //     parent.path
-      //   }\\${name}`;
-      // } else {
-      //   path = `${config.get('filePath')}\\${user._id}\\${name}`;
-      // }
 
       if (parent) {
         path = `${config.get('filePath')}/${user._id}/${parent.path}/${name}`;
@@ -221,7 +213,6 @@ const FileController = {
       let filePath: string = name;
 
       if (parent) {
-        // filePath = parent.path + '\\' + name;
         filePath = parent.path + '/' + name;
       }
 
@@ -262,86 +253,6 @@ const FileController = {
     }
   },
 
-  // async uploadFile(
-  //   req: express.Request,
-  //   res: express.Response
-  // ): Promise<express.Response> {
-  //   try {
-  //     const file = req.files.file;
-
-  //     if (!file) {
-  //       return res.status(500).json({ message: 'Upload error/not file' });
-  //     }
-
-  //     const [parent, user] = await Promise.all([
-  //       File.findOne({
-  //         user: req.user?.id,
-  //         _id: req.body.parent,
-  //       }),
-  //       User.findOne({ _id: req.user?.id }),
-  //     ]);
-
-  //     if (!user) {
-  //       return res.status(500).json({ message: 'Upload error/ User Error ' });
-  //     }
-
-  //     if (user.usedSpace + file.size > user.diskSpace) {
-  //       return res.status(400).json({ message: 'There no space on the disk' });
-  //     }
-
-  //     user.usedSpace = user.usedSpace + file.size;
-  //     user.files++;
-
-  //     let path;
-  //     if (parent) {
-  //       path = `${config.get('filePath')}\\${user._id}\\${parent.path}\\${
-  //         file.name
-  //       }`;
-  //     } else {
-  //       path = `${config.get('filePath')}\\${user._id}\\${file.name}`;
-  //     }
-
-  //     if (fs.existsSync(path)) {
-  //       return res.status(400).json({ message: 'File already exist' });
-  //     }
-
-  //     const type: string = file.name.split('.').pop();
-  //     let filePath: string = file.name;
-
-  //     if (parent) {
-  //       filePath = parent.path + '\\' + file.name;
-  //     }
-
-  //     const dbFile: IFile = new File({
-  //       name: file.name,
-  //       type,
-  //       date: Date.now(),
-  //       size: file.size,
-  //       path: filePath,
-  //       parent: parent?._id || user._id,
-  //       user: user._id,
-  //     });
-
-  //     if (parent) {
-  //       parent.childs.push(dbFile._id);
-  //       await parent.save();
-  //     }
-
-  //     await Promise.all([
-  //       this.resizeParent(dbFile, user, dbFile.size),
-  //       dbFile.save(),
-  //       user.save(),
-  //     ]);
-
-  //     file.mv(path);
-
-  //      return res.json(dbFile);
-  //     } catch (e: any) {
-  //     console.log(e);
-  //     return res.status(500).json({ message: 'Upload error' });
-  //   }
-  // },
-
   async downloadFile(
     req: express.Request,
     res: express.Response
@@ -360,12 +271,7 @@ const FileController = {
         // config.get('filePath') + '\\' + req.user?.id + '\\' + file.path;
         config.get('filePath') + '/' + req.user?.id + '/' + file.path;
 
-      // if (!fs.existsSync(path)) { //!раскоментировать для работы без AWS S3
-      //   return res.status(400).json({ message: 'Download error' });
-      // }
-
-      //return res.download(path, file.name);
-      const url = await yandexDisk.getDownloadLink(path);
+          const url = await yandexDisk.getDownloadLink(path);
       return res.json({ href: url, name: file.name });
     } catch (e: any) {
       console.log(e);
@@ -454,7 +360,6 @@ const FileController = {
       if (user.avatar) {
         const pathAvatar =
           path.join(__dirname, '../../../static') + '/' + user.avatar;
-        // path.join(__dirname, '../../../static') + '\\' + user.avatar;
         if (fs.existsSync(pathAvatar)) {
           fs.unlinkSync(pathAvatar);
         }
@@ -463,8 +368,7 @@ const FileController = {
       const avatarName = uuid.v4() + '.jpg';
 
       file.mv(path.join(__dirname, '../../../static') + '/' + avatarName);
-      // file.mv(path.join(__dirname, '../../../static') + '\\' + avatarName);
-      user.avatar = avatarName;
+            user.avatar = avatarName;
       await user.save();
 
       return res.json({ message: 'avatar upload' });
@@ -551,28 +455,7 @@ const FileController = {
     this.resizeParent(parent, user, resize);
   },
 
-  // async renamePathChild(file: IFile, oldName: string, newName: string) {
-  //   console.log('yes');
-  //   const files = await File.find({
-  //     user: file.user,
-  //     parent: file._id,
-  //   });
-
-  //   console.log('files: ', files);
-
-  //   if (files.length === 0) {
-  //     return;
-  //   }
-  //   console.log('no');
-  //   files.forEach(async (file) => {
-  //     const pathArray = file.path.split('\\');
-  //     pathArray[pathArray.indexOf(oldName)] = newName;
-  //     file.path = pathArray.join('\\');
-
-  //     await file.save();
-  //     this.renamePathChild(file, oldName, newName);
-  //   });
-  // },
+ 
 };
 
 export default FileController;
