@@ -8,7 +8,7 @@ import path1 from 'path';
 import { IShare } from '../types/types';
 
 class ShareController {
-  static linkDownload = '';
+  static publicKey = '';
 
   static async getFile(
     req: express.Request,
@@ -37,10 +37,12 @@ class ShareController {
       //   res.status(500).json({ message: 'Can not get file' });
       // }
 
-      ShareController.linkDownload = await yandexDisk.getDownloadLink(path);
+      ShareController.publicKey = (
+        await yandexDisk.getDownloadLink(path)
+      ).public_key;
 
       setTimeout(() => {
-        ShareController.linkDownload = '';
+        ShareController.publicKey = '';
       }, 5000);
 
       res.sendFile(
@@ -55,10 +57,10 @@ class ShareController {
   }
 
   static getLinkDownload(req: express.Request, res: express.Response) {
-    if (!ShareController.linkDownload) {
+    if (!ShareController.publicKey) {
       return res.status(500).json({ message: 'Can not get file' });
     }
-    return res.json({ link: ShareController.linkDownload });
+    return res.json({ link: ShareController.publicKey });
   }
 }
 

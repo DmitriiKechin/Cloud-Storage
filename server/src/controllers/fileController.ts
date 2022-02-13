@@ -271,8 +271,8 @@ const FileController = {
         // config.get('filePath') + '\\' + req.user?.id + '\\' + file.path;
         config.get('filePath') + '/' + req.user?.id + '/' + file.path;
 
-          const url = await yandexDisk.getDownloadLink(path);
-      return res.json({ href: url, name: file.name });
+      const publicKey = await yandexDisk.getDownloadLink(path);
+      return res.json(publicKey);
     } catch (e: any) {
       console.log(e);
       res.status(500).json({ message: 'Download error' });
@@ -368,7 +368,7 @@ const FileController = {
       const avatarName = uuid.v4() + '.jpg';
 
       file.mv(path.join(__dirname, '../../../static') + '/' + avatarName);
-            user.avatar = avatarName;
+      user.avatar = avatarName;
       await user.save();
 
       return res.json({ message: 'avatar upload' });
@@ -454,8 +454,6 @@ const FileController = {
 
     this.resizeParent(parent, user, resize);
   },
-
- 
 };
 
 export default FileController;

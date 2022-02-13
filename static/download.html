@@ -9,15 +9,26 @@
   <body>
     <script defer>
       (async () => {
-        const response = await fetch(`/api/share/getLink`);
+        const response = await fetch(`/api/share/getPublicKey`);
         try {
           if (!response.ok) {
             throw new Error();
           }
 
-          const url = await response.json();
+          const publicKey = (await response.json()).link;
 
-          const file = await fetch(url.link);
+          const url = new URL(
+            `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${publicKey}`
+          );
+          const responseUrlDownload = await fetch(url.toString());
+
+          if (!responseUrlDownload.ok) {
+            throw new Error('Error download');
+          }
+
+          const urlDownload = await responseUrlDownload.json();
+
+          const file = await fetch(urlDownload.href);
 
           if (!file.ok) {
             throw new Error();

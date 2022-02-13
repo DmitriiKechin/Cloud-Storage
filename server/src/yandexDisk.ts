@@ -45,11 +45,25 @@ export const getUplodLink = async (path: string): Promise<string> => {
   return link.href;
 };
 
-export const getDownloadLink = async (path: string): Promise<string> => {
-  const link = await request(
-    `https://cloud-api.yandex.net/v1/disk/resources/download?path=${path}&fields=href`
+export const getDownloadLink = async (
+  path: string
+): Promise<{ public_key: string }> => {
+  await request(
+    `https://cloud-api.yandex.net/v1/disk/resources/publish?path=${path}`,
+    'PUT'
   );
-  return link.href;
+  const publicKey = await request(
+    `https://cloud-api.yandex.net/v1/disk/resources?path=${path}&fields=public_key`
+  );
+
+  setTimeout(() => {
+    request(
+      `https://cloud-api.yandex.net/v1/disk/resources/unpublish?path=${path}`,
+      'PUT'
+    );
+  }, 1000 * 60 * 1);
+
+  return publicKey;
 };
 
 export const createFolderYandexDisk = async (path: string) => {

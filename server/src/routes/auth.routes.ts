@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken';
 import { check, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import authMiddleware from '../middleware/auth.middleware';
-import FileService from '../services/fileService';
-import File from '../models/File';
 import dotenv from 'dotenv';
 import { ILoginResponse, IUser } from '../types/types';
+import path from 'path';
+import fs from 'fs';
 
 dotenv.config();
 const secretPhrase = process.env.JWT_SECRET || '';
@@ -85,6 +85,15 @@ router.post(
       const token = jwt.sign({ id: user.id }, secretPhrase, {
         expiresIn: '1h',
       });
+
+      if (user.avatar) {
+        const pathAvatar =
+          path.join(__dirname, '../../../static') + '/' + user.avatar;
+        if (!fs.existsSync(pathAvatar)) {
+          user.avatar = '';
+          await user.save();
+        }
+      }
 
       response.token = token;
       response.user = user;

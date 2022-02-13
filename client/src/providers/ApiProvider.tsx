@@ -161,7 +161,7 @@ const APIProvider: React.FC = ({ children }) => {
       const cancel = xhr.abort.bind(xhr);
       return cancel;
     },
-    [auth, isAuthorization, setMessage, token]
+    [auth, isAuthorization, request, setMessage, token]
   );
 
   const downloadFile = useCallback(
@@ -173,26 +173,38 @@ const APIProvider: React.FC = ({ children }) => {
           },
         });
 
-        if (response.status === 200) {
-          // const blob = await response.blob();
-          // const downloadUrl = window.URL.createObjectURL(blob);
-          // const link = document.createElement('a');
-          // link.href = downloadUrl;
-          // link.download = fileName;
-          // document.body.appendChild(link);
-          // link.click();
-          // link.remove();
-          const file = await response.json();
-          console.log('file: ', file);
-          const link = document.createElement('a');
-          link.href = file.href;
-          link.download = file.name;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-        } else {
+        if (!response.ok) {
           throw new Error('Error download');
         }
+
+        const publicKey = (await response.json()).public_key;
+        console.log('publicKey: ', publicKey);
+
+        const url = new URL(
+          `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${publicKey}`
+        );
+        const responseUrlDownload = await fetch(url.toString());
+
+        if (!responseUrlDownload.ok) {
+          throw new Error('Error download');
+        }
+
+        const urlDownload = await responseUrlDownload.json();
+
+        const file = await fetch(urlDownload.href);
+
+        if (!file.ok) {
+          throw new Error('Error download');
+        }
+
+        const blob = await file.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
       } catch (error: any) {
         setMessage(error.message);
       } finally {
