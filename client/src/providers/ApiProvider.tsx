@@ -193,9 +193,9 @@ const APIProvider: React.FC = ({ children }) => {
         const urlDownload = await responseUrlDownload.json();
         console.log('urlDownload: ', urlDownload.href);
 
-        const iframe = document.createElement('iframe');
-        iframe.name = 'hiddenIFrameID';
-        iframe.style.display = 'none';
+        // const iframe = document.createElement('iframe');
+        // iframe.name = 'hiddenIFrameID';
+        // iframe.style.display = 'none';
 
         const form = document.createElement('form');
         form.target = 'hiddenIFrameID';
@@ -232,9 +232,9 @@ const APIProvider: React.FC = ({ children }) => {
           'v2'
         )}">`;
 
-        iframe.appendChild(form);
-        document.body.appendChild(iframe);
-
+        //iframe.appendChild(form);
+        document.body.appendChild(form);
+        console.log('form');
         form.submit();
         //https://downloader.disk.yandex.ru/disk/e86332418d5869e495662b02f8567de5eb5863a9b030efc4948bc80ad2a7a7fc/6209ae7d/6466gZAi_Ghtyy0oTlUXWwZeXJKtE7gaxKkkwCdsubRj2-HPVMBUu_Y1TKlXawsXQoawS1neO_sQxnzuIN7hSA%3D%3D?uid=0&filename=_DSC0363%2520%25D0%25BA%25D0%25BE%25D0%25BF%25D0%25B8%25D1%258F%2520%25282%2529.jpg&disposition=attachment&hash=Kz1th1FhmTe2h51%252BTgndHIzQGRBQy45zB4QT82Xmk%252BcSFNR9EoYm1ttOJvRBvs5yq%2FJ6bpmRyOJonT3VoXnDag%253D%253D%253A&limit=0&content_type=image%252Fjpeg&owner_uid=30468971&fsize=13174611&hid=e6d4e99bf281029568be0a9f78d2ab0d&media_type=image&tknv=v2
         //https://downloader.disk.yandex.ru/disk/2bff32df5316d11894320fe1e14872cc16c39e786623adaa0acbbfd1a94424d3/6209b250/6466gZAi_Ghtyy0oTlUXWwZeXJKtE7gaxKkkwCdsubRj2-HPVMBUu_Y1TKlXawsXQoawS1neO_sQxnzuIN7hSA%3D%3D?uid=0&filename=_DSC0363%20%D0%BA%D0%BE%D0%BF%D0%B8%D1%8F%20%282%29.jpg&disposition=attachment&hash=Kz1th1FhmTe2h51%2BTgndHIzQGRBQy45zB4QT82Xmk%2BcSFNR9EoYm1ttOJvRBvs5yq/J6bpmRyOJonT3VoXnDag%3D%3D%3A&limit=0&content_type=image%2Fjpeg&owner_uid=30468971&fsize=13174611&hid=e6d4e99bf281029568be0a9f78d2ab0d&media_type=image&tknv=v2
