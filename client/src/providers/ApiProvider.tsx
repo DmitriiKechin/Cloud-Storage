@@ -180,31 +180,40 @@ const APIProvider: React.FC = ({ children }) => {
         const publicKey = (await response.json()).public_key;
         console.log('publicKey: ', publicKey);
 
-        const url = new URL(
-          `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${publicKey}`
+        const responseUrlDownload = await fetch(
+          `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${encodeURIComponent(
+            publicKey
+          )}`
         );
-        const responseUrlDownload = await fetch(url.toString());
 
         if (!responseUrlDownload.ok) {
           throw new Error('Error download');
         }
 
         const urlDownload = await responseUrlDownload.json();
+        console.log('urlDownload: ', urlDownload.href);
 
-        const file = await fetch(urlDownload.href);
+        const iframe = document.createElement('iframe');
+        iframe.id = 'hiddenIFrameID';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        iframe.src = urlDownload.href;
 
-        if (!file.ok) {
-          throw new Error('Error download');
-        }
+        // const file = await fetch(urlDownload.href);
+        // console.log('file: ', file);
 
-        const blob = await file.blob();
-        const downloadUrl = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+        // if (!file.ok) {
+        //   throw new Error('Error download');
+        // }
+
+        // const blob = await file.blob();
+        // const downloadUrl = window.URL.createObjectURL(blob);
+        // const link = document.createElement('a');
+        // link.href = downloadUrl;
+        // link.download = fileName;
+        // document.body.appendChild(link);
+        // link.click();
+        // link.remove();
       } catch (error: any) {
         setMessage(error.message);
       } finally {
