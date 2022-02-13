@@ -26,7 +26,6 @@ class ShareController {
       }
 
       const path: string =
-        // config.get('filePath') + '\\' + shareLink.user + '\\' + file.path;
         config.get('filePath') + '/' + shareLink.user + '/' + file.path;
 
       if (!fs.existsSync(path)) {

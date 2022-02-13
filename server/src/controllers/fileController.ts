@@ -9,8 +9,8 @@ import Share from '../models/Share';
 import path from 'path';
 import { IFile, IShare, IUser } from '../types/types';
 
-const FileController = {
-  async renameFile(
+class FileController {
+  static async renameFile(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -32,9 +32,9 @@ const FileController = {
 
       return res.status(400).json({ message: 'Error rename' });
     }
-  },
+  }
 
-  async shareFile(
+  static async shareFile(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -71,9 +71,9 @@ const FileController = {
 
       return res.status(400).json({ message: 'Error share file' });
     }
-  },
+  }
 
-  async createDir(
+  static async createDir(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -99,7 +99,6 @@ const FileController = {
       }
 
       if (parentFile) {
-        // file.path = `${parentFile.path}\\${file.name}`;
         file.path = `${parentFile.path}/${file.name}`;
         parentFile.childs.push(file._id);
         await parentFile.save();
@@ -115,9 +114,9 @@ const FileController = {
       console.log(e);
       return res.status(400).json({ message: 'Error create folder' });
     }
-  },
+  }
 
-  async getFiles(
+  static async getFiles(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -170,9 +169,9 @@ const FileController = {
     } catch (e: any) {
       return res.status(500).json({ message: 'Can not get files' });
     }
-  },
+  }
 
-  async uploadFile(
+  static async uploadFile(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -204,11 +203,11 @@ const FileController = {
 
       let path;
       if (parent) {
-        path = `${config.get('filePath')}\\${user._id}\\${parent.path}\\${
+        path = `${config.get('filePath')}/${user._id}/${parent.path}/${
           file.name
         }`;
       } else {
-        path = `${config.get('filePath')}\\${user._id}\\${file.name}`;
+        path = `${config.get('filePath')}/${user._id}/${file.name}`;
       }
 
       if (fs.existsSync(path)) {
@@ -219,7 +218,7 @@ const FileController = {
       let filePath: string = file.name;
 
       if (parent) {
-        filePath = parent.path + '\\' + file.name;
+        filePath = parent.path + '/' + file.name;
       }
 
       const dbFile: IFile = new File({
@@ -250,9 +249,9 @@ const FileController = {
       console.log(e);
       return res.status(500).json({ message: 'Upload error' });
     }
-  },
+  }
 
-  async downloadFile(
+  static async downloadFile(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response | void> {
@@ -267,7 +266,6 @@ const FileController = {
       }
 
       const path: string =
-        // config.get('filePath') + '\\' + req.user?.id + '\\' + file.path;
         config.get('filePath') + '/' + req.user?.id + '/' + file.path;
 
       if (!fs.existsSync(path)) {
@@ -279,9 +277,9 @@ const FileController = {
       console.log(e);
       res.status(500).json({ message: 'Download error' });
     }
-  },
+  }
 
-  async deleteFile(
+  static async deleteFile(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -343,9 +341,9 @@ const FileController = {
       console.log(e);
       return res.status(500).json({ message: 'Delete error' });
     }
-  },
+  }
 
-  async uploadAvatar(
+  static async uploadAvatar(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -362,7 +360,6 @@ const FileController = {
       if (user.avatar) {
         const pathAvatar =
           path.join(__dirname, '../../../static') + '/' + user.avatar;
-        // path.join(__dirname, '../../../static') + '\\' + user.avatar;
         if (fs.existsSync(pathAvatar)) {
           fs.unlinkSync(pathAvatar);
         }
@@ -371,7 +368,6 @@ const FileController = {
       const avatarName = uuid.v4() + '.jpg';
 
       file.mv(path.join(__dirname, '../../../static') + '/' + avatarName);
-      // file.mv(path.join(__dirname, '../../../static') + '\\' + avatarName);
       user.avatar = avatarName;
       await user.save();
 
@@ -380,9 +376,9 @@ const FileController = {
       console.log(e);
       return res.status(400).json({ message: 'Upload avatar error' });
     }
-  },
+  }
 
-  async deleteAvatar(
+  static async deleteAvatar(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -396,7 +392,7 @@ const FileController = {
       }
 
       fs.unlinkSync(
-        path.join(__dirname, '../../../static') + '\\' + user.avatar
+        path.join(__dirname, '../../../static') + '/' + user.avatar
       );
       user.avatar = '';
       await user.save();
@@ -405,9 +401,9 @@ const FileController = {
       console.log(e);
       return res.status(400).json({ message: 'Upload avatar error' });
     }
-  },
+  }
 
-  async deleteFileChilds(file: IFile, user: IUser): Promise<void> {
+  static async deleteFileChilds(file: IFile, user: IUser): Promise<void> {
     const files = await File.find({
       user: file.user,
       parent: file._id,
@@ -437,9 +433,13 @@ const FileController = {
       await file.remove();
       await this.deleteFileChilds(file, user);
     });
-  },
+  }
 
-  async resizeParent(file: IFile, user: IUser, resize: number): Promise<void> {
+  static async resizeParent(
+    file: IFile,
+    user: IUser,
+    resize: number
+  ): Promise<void> {
     if (!file || !user || !resize) {
       return;
     }
@@ -457,7 +457,7 @@ const FileController = {
     parent.save();
 
     this.resizeParent(parent, user, resize);
-  },
-};
+  }
+}
 
 export default FileController;

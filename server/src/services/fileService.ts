@@ -2,8 +2,8 @@ import fs from 'fs';
 import config from 'config';
 import { IFile } from '../types/types';
 
-const FileService = {
-  createDir(file: IFile) {
+class FileService {
+  static createDir(file: IFile) {
     const filePath: string = this.getPath(file);
 
     return new Promise<{ message: string }>((resolve, reject) => {
@@ -18,21 +18,20 @@ const FileService = {
         return reject({ message: 'File error' });
       }
     });
-  },
+  }
 
-  deleteFile(file: IFile) {
+  static deleteFile(file: IFile) {
     const path = this.getPath(file);
     if (file.type === 'dir') {
       fs.rmdirSync(path);
     } else {
       fs.unlinkSync(path);
     }
-  },
+  }
 
-  getPath(file: IFile): string {
-    // return config.get('filePath') + '\\' + file.user + '\\' + file.path;
+  static getPath(file: IFile): string {
     return config.get('filePath') + '/' + file.user + '/' + file.path;
-  },
-};
+  }
+}
 
 export default FileService;

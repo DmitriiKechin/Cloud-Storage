@@ -30,20 +30,33 @@ router.post(
       const errors: object = validationResult(req);
 
       if (Object.keys(errors).length === 0) {
-        return res.status(400).json({ message:'Uncorrect request'});
+        return res.status(400).json({ message: 'Uncorrect request' });
       }
       const { email, password }: IData = req.body;
 
       const candidate: IUser | null = await User.findOne({ email });
 
       if (candidate) {
-        return res.status(400).json({ message: `User with email ${email} already exist`});
+        return res
+          .status(400)
+          .json({ message: `User with email ${email} already exist` });
       }
       const hashPassword = await bcrypt.hash(password, 12);
       const user = new User({ email, password: hashPassword });
+
+      FileService.createDir(new File({ user: user.id, name: '' }));
       await user.save();
-      await FileService.createDir(new File({ user: user.id, name: '' }));
-      res.status(201).json({ message: 'User was created' });
+
+      const token = jwt.sign({ id: user.id }, secretPhrase, {
+        expiresIn: '1h',
+      });
+
+      const response: ILoginResponse = { message: '' };
+      response.token = token;
+      response.user = user;
+      response.message = 'User was created';
+
+      res.status(201).json(response);
     } catch (e) {
       console.log(e);
       res.status(500).json({ message: 'Server error' });

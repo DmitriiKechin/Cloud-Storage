@@ -80,7 +80,6 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
   useEffect(() => {
     if (titleRef.current) {
       const titleWidth = titleRef.current.clientWidth;
-      console.log('titleWidth: ', titleWidth);
       const rem = Number.parseFloat(getComputedStyle(document.body).fontSize);
       shortNameRef.current = nameShort(
         file.name,
