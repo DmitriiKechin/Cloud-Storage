@@ -11,7 +11,7 @@
     "server": "nodemon --exec ts-node ./server/src/app.ts",
     "client": "npm run start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "deploy": "git add . && git commit -m && git push heroku +HEAD:master"
+    "deploy": "git add . && git commit -m \"deploy\" && git push heroku +HEAD:master"
   },
   "keywords": [
     "react",
