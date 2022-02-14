@@ -1,6 +1,6 @@
 const downloadViaForm = (urlDownload: string) => {
   console.log('urlDownload: ', urlDownload);
-  const url = new URL(urlDownload);
+  //const url = new URL(urlDownload);
   const [action, parameters] = urlDownload.split('?');
   console.log('parameters: ', parameters);
   console.log('action: ', action);
@@ -8,17 +8,18 @@ const downloadViaForm = (urlDownload: string) => {
 
   form.target = 'formDownload';
   form.method = 'get';
-  form.action = 'https://downloader.disk.yandex.ru' + url.pathname;
+  form.action =
+    'https://downloader.disk.yandex.ru/disk/6ec056cd25a1f31ca11e71e08324c5c2481eb29ceb6bdd95da7d063facc7a2be/620ab124/6466gZAi_Ghtyy0oTlUXWwZeXJKtE7gaxKkkwCdsubRj2-HPVMBUu_Y1TKlXawsXQoawS1neO_sQxnzuIN7hSA%3D%3D';
 
-  // form.innerHTML = '';
+  form.innerHTML = '';
 
-  // parameters.split('&').forEach((parameter) => {
-  //   const [key, value] = parameter.split('=');
-  //   form.innerHTML += `<input name="${key}" value="${decodeURIComponent(
-  //     value
-  //   )}">`;
-  // });
-  // form.innerHTML += '</input>';
+  parameters.split('&').forEach((parameter) => {
+    const [key, value] = parameter.split('=');
+    form.innerHTML += `<input name="${key}" value="${decodeURIComponent(
+      value
+    )}">`;
+  });
+  form.innerHTML += '</input>';
 
   // console.log('form.action: ', form.action);
   // console.log('form.innerHTML: ', form.innerHTML);
