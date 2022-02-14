@@ -8,8 +8,7 @@ const downloadViaForm = (urlDownload: string) => {
 
   form.target = 'formDownload';
   form.method = 'get';
-  form.action = 'https://downloader.disk.yandex.ru';
-  form.action += url.pathname;
+  form.action = 'https://downloader.disk.yandex.ru' + url.pathname;
 
   // form.innerHTML = '';
 
