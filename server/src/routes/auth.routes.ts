@@ -88,7 +88,7 @@ router.post(
 
       if (user.avatar) {
         const pathAvatar =
-          path.join(__dirname, '../../../static') + '/' + user.avatar;
+          path.join(__dirname, '../../../client', 'build') + '/' + user.avatar;
         if (!fs.existsSync(pathAvatar)) {
           user.avatar = '';
           await user.save();

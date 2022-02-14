@@ -16,7 +16,7 @@ const PORT: string | number = process.env.PORT || 5000;
 
 app.use(fileUpload());
 app.use(express.json());
-app.use(express.static('./static'));
+
 app.use('/api/auth', authRouter);
 app.use('/api/files', fileRouter);
 app.use('/api/share', shareRouter);

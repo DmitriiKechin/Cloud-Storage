@@ -359,7 +359,7 @@ const FileController = {
 
       if (user.avatar) {
         const pathAvatar =
-          path.join(__dirname, '../../../static') + '/' + user.avatar;
+				path.join(__dirname, '../../../client','build') + '/' + user.avatar;
         if (fs.existsSync(pathAvatar)) {
           fs.unlinkSync(pathAvatar);
         }
@@ -367,7 +367,9 @@ const FileController = {
 
       const avatarName = uuid.v4() + '.jpg';
 
-      file.mv(path.join(__dirname, '../../../static') + '/' + avatarName);
+      file.mv(
+        path.join(__dirname, '../../../client', 'build') + '/' + avatarName
+      );
       user.avatar = avatarName;
       await user.save();
 
@@ -392,7 +394,7 @@ const FileController = {
       }
 
       fs.unlinkSync(
-        path.join(__dirname, '../../../static') + '\\' + user.avatar
+        path.join(__dirname, '../../../client','build') + '/' + user.avatar
       );
       user.avatar = '';
       await user.save();

@@ -46,11 +46,8 @@ class ShareController {
       }, 5000);
 
       res.sendFile(
-        path1.resolve(__dirname, '../../../static', 'download.html')
+        path1.resolve(__dirname, '../../../client', 'build', 'download.html')
       );
-
-      // return res.download(url, file.name);
-      // return res.download(path, file.name);
     } catch (e: any) {
       return res.status(500).json({ message: 'Can not get file' });
     }
