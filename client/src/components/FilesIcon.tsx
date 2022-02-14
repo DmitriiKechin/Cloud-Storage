@@ -95,7 +95,6 @@ const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
   const сomputationMargin = useCallback(() => {
     if (wrapperRef.current) {
       const rem = Number.parseFloat(getComputedStyle(document.body).fontSize);
-      console.log('icon resize');
       const widthWrapper = wrapperRef.current.offsetWidth - 0.4 * rem - 0.5;
       const numberOfIconInRow = Math.floor(widthWrapper / (6.4 * rem));
       const margin =
