@@ -5,7 +5,7 @@ const downloadViaForm = (urlDownload: string) => {
   console.log('action: ', action);
   const form = document.createElement('form');
 
-  form.name = 'formDownload';
+  form.target = 'formDownload';
   form.method = 'get';
   form.action = action;
   form.innerHTML = '';
@@ -22,7 +22,7 @@ const downloadViaForm = (urlDownload: string) => {
   console.log('form.innerHTML: ', form.innerHTML);
   document.body.appendChild(form);
   form.submit();
-  form.remove();
+  //form.remove();
 
   // const form = document.createElement('form');
 
