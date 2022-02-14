@@ -1,5 +1,6 @@
 const downloadViaForm = (urlDownload: string) => {
   console.log('urlDownload: ', urlDownload);
+  const url = new URL(urlDownload);
   const [action, parameters] = urlDownload.split('?');
   console.log('parameters: ', parameters);
   console.log('action: ', action);
@@ -7,7 +8,9 @@ const downloadViaForm = (urlDownload: string) => {
 
   form.target = 'formDownload';
   form.method = 'get';
-  form.action = action;
+  form.action = 'https://downloader.disk.yandex.ru';
+  form.action += url.pathname;
+
   // form.innerHTML = '';
 
   // parameters.split('&').forEach((parameter) => {
