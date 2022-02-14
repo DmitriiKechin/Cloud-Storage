@@ -14,7 +14,7 @@ const downloadViaForm = (urlDownload: string) => {
 
   document.body.appendChild(form);
   form.submit();
-  form.remove();
+  //  form.remove();
 };
 
 export default downloadViaForm;
