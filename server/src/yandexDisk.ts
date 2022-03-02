@@ -56,6 +56,13 @@ export const getDownloadLink = async (
     `https://cloud-api.yandex.net/v1/disk/resources?path=${path}&fields=public_key`
   );
 
+  const urlDownload = await request(
+    `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${encodeURIComponent(
+      publicKey.public_key
+    )}`
+  );
+  console.log('urlDownload: ', urlDownload.href);
+
   // setTimeout(() => {
   //   request(
   //     `https://cloud-api.yandex.net/v1/disk/resources/unpublish?path=${path}`,
@@ -63,7 +70,7 @@ export const getDownloadLink = async (
   //   );
   // }, 1000 * 60 * 1);
 
-  return publicKey;
+  return urlDownload;
 };
 
 export const createFolderYandexDisk = async (path: string) => {

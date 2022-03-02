@@ -6,6 +6,7 @@ import fileRouter from './routes/file.routes';
 import shareRouter from './routes/share.routes';
 import dotenv from 'dotenv';
 import path from 'path';
+import proxy from 'express-http-proxy';
 
 dotenv.config();
 
@@ -20,6 +21,13 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/files', fileRouter);
 app.use('/api/share', shareRouter);
+
+app.use(
+  '/api/proxy',
+  proxy('https://downloader.disk.yandex.ru', {
+    parseReqBody: false,
+  })
+);
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(path.join(__dirname, '../../client', 'build')));

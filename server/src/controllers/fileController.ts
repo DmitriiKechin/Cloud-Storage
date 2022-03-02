@@ -268,7 +268,6 @@ const FileController = {
       }
 
       const path: string =
-        // config.get('filePath') + '\\' + req.user?.id + '\\' + file.path;
         config.get('filePath') + '/' + req.user?.id + '/' + file.path;
 
       const publicKey = await yandexDisk.getDownloadLink(path);
@@ -359,7 +358,7 @@ const FileController = {
 
       if (user.avatar) {
         const pathAvatar =
-				path.join(__dirname, '../../../client','build') + '/' + user.avatar;
+          path.join(__dirname, '../../../client', 'build') + '/' + user.avatar;
         if (fs.existsSync(pathAvatar)) {
           fs.unlinkSync(pathAvatar);
         }
@@ -394,7 +393,7 @@ const FileController = {
       }
 
       fs.unlinkSync(
-        path.join(__dirname, '../../../client','build') + '/' + user.avatar
+        path.join(__dirname, '../../../client', 'build') + '/' + user.avatar
       );
       user.avatar = '';
       await user.save();

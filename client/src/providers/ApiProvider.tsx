@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { APIContext } from '../contex/ApiContext';
-import downloadViaForm from '../global_Function/downloadViaForm';
 import useAuth from '../hooks/auth.hook';
 import useMessage from '../hooks/message.hook';
 import useRequest from '../hooks/request.hook';
@@ -178,62 +177,26 @@ const APIProvider: React.FC = ({ children }) => {
           throw new Error('Error download');
         }
 
-        const publicKey = (await response.json()).public_key;
-        console.log('publicKey: ', publicKey);
+        const urlDownload = (await response.json()).href;
+        console.log('urlDownload: ', urlDownload);
+        let url = new URL(urlDownload);
 
-        const responseUrlDownload = await fetch(
-          `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${encodeURIComponent(
-            publicKey
-          )}`
+        const downloadResponse = await fetch(
+          `/api/proxy${url.toString().slice(url.origin.length)}`
         );
 
-        if (!responseUrlDownload.ok) {
+        if (!downloadResponse.ok) {
           throw new Error('Error download');
         }
 
-        const urlDownload = await responseUrlDownload.json();
-        console.log('urlDownload: ', urlDownload.href);
-
-        // const form = document.createElement('form');
-
-        // form.target = 'formDownload';
-        // form.method = 'get';
-        // form.action =
-        //   'https://downloader.disk.yandex.ru/disk/6ec056cd25a1f31ca11e71e08324c5c2481eb29ceb6bdd95da7d063facc7a2be/620ab124/6466gZAi_Ghtyy0oTlUXWwZeXJKtE7gaxKkkwCdsubRj2-HPVMBUu_Y1TKlXawsXQoawS1neO_sQxnzuIN7hSA%3D%3D';
-        // form.innerHTML = '<input name="uid" value="0">';
-        // form.innerHTML += `<input name="filename" value="${decodeURIComponent(
-        //   '_DSC0363%20%D0%BA%D0%BE%D0%BF%D0%B8%D1%8F%20%282%29.jpg'
-        // )}">`;
-        // form.innerHTML += '<input name="disposition" value="attachment">';
-        // form.innerHTML += `<input name="hash" value="${decodeURIComponent(
-        //   'Kz1th1FhmTe2h51%2BTgndHIzQGRBQy45zB4QT82Xmk%2BcSFNR9EoYm1ttOJvRBvs5yq/J6bpmRyOJonT3VoXnDag%3D%3D%3A'
-        // )}">`;
-        // form.innerHTML += '<input name="limit" value="0">';
-        // form.innerHTML += `<input name="content_type" value="${decodeURIComponent(
-        //   'image%2Fjpeg'
-        // )}">`;
-        // form.innerHTML += '<input name="owner_uid" value="30468971">';
-        // form.innerHTML += '<input name="fsize" value="13174611">';
-        // form.innerHTML +=
-        //   '<input name="hid" value="e6d4e99bf281029568be0a9f78d2ab0d">';
-        // form.innerHTML += '<input name="media_type" value="image">';
-        // form.innerHTML += '<input name="tknv" value="v2">';
-
-        // //media_type=image&tknv=v2
-        // //https://downloader.disk.yandex.ru/disk/6ec056cd25a1f31ca11e71e08324c5c2481eb29ceb6bdd95da7d063facc7a2be/620ab124/6466gZAi_Ghtyy0oTlUXWwZeXJKtE7gaxKkkwCdsubRj2-HPVMBUu_Y1TKlXawsXQoawS1neO_sQxnzuIN7hSA%3D%3D?uid=0&filename=_DSC0363+копия+%282%29.jpg&disposition=attachment&hash=Kz1th1FhmTe2h51%2BTgndHIzQGRBQy45zB4QT82Xmk%2BcSFNR9EoYm1ttOJvRBvs5yq%2FJ6bpmRyOJonT3VoXnDag%3D%3D%3A&limit=0&content_type=image%2Fjpeg&owner_uid=30468971&fsize=13174611&hid=e6d4e99bf281029568be0a9f78d2ab0d&media_type=image&tknv=v2
-        // //https://downloader.disk.yandex.ru/disk/6ec056cd25a1f31ca11e71e08324c5c2481eb29ceb6bdd95da7d063facc7a2be/620ab124/6466gZAi_Ghtyy0oTlUXWwZeXJKtE7gaxKkkwCdsubRj2-HPVMBUu_Y1TKlXawsXQoawS1neO_sQxnzuIN7hSA%3D%3D?uid=0&filename=_DSC0363%20%D0%BA%D0%BE%D0%BF%D0%B8%D1%8F%20%282%29.jpg&disposition=attachment&hash=Kz1th1FhmTe2h51%2BTgndHIzQGRBQy45zB4QT82Xmk%2BcSFNR9EoYm1ttOJvRBvs5yq/J6bpmRyOJonT3VoXnDag%3D%3D%3A&limit=0&content_type=image%2Fjpeg&owner_uid=30468971&fsize=13174611&hid=e6d4e99bf281029568be0a9f78d2ab0d&media_type=image&tknv=v2
-
-        //form.action:  https://downloader.disk.yandex.ru/disk/6ec056cd25a1f31ca11e71e08324c5c2481eb29ceb6bdd95da7d063facc7a2be/620ab124/6466gZAi_Ghtyy0oTlUXWwZeXJKtE7gaxKkkwCdsubRj2-HPVMBUu_Y1TKlXawsXQoawS1neO_sQxnzuIN7hSA%3D%3D
-        //form.action:  https://downloader.disk.yandex.ru/disk/6ec056cd25a1f31ca11e71e08324c5c2481eb29ceb6bdd95da7d063facc7a2be/620ab124/6466gZAi_Ghtyy0oTlUXWwZeXJKtE7gaxKkkwCdsubRj2-HPVMBUu_Y1TKlXawsXQoawS1neO_sQxnzuIN7hSA%3D%3D
-        //form.action:  https://downloader.disk.yandex.ru/disk/262133e3f78dc2dab08732089b7eeaa0ef97a77318c461b48f8071847398ece7/620abb5e/6466gZAi_Ghtyy0oTlUXWwZeXJKtE7gaxKkkwCdsubRj2-HPVMBUu_Y1TKlXawsXQoawS1neO_sQxnzuIN7hSA%3D%3D
-
-        //form.innerHTML:  <input name="uid" value="0"><input name="filename" value="_DSC0363 копия (2).jpg"><input name="disposition" value="attachment"><input name="hash" value="Kz1th1FhmTe2h51+TgndHIzQGRBQy45zB4QT82Xmk+cSFNR9EoYm1ttOJvRBvs5yq/J6bpmRyOJonT3VoXnDag==:"><input name="limit" value="0"><input name="content_type" value="image/jpeg"><input name="owner_uid" value="30468971"><input name="fsize" value="13174611"><input name="hid" value="e6d4e99bf281029568be0a9f78d2ab0d"><input name="media_type" value="image"><input name="tknv" value="v2">
-        //form.innerHTML:  <input name="uid" value="0"><input name="filename" value="_DSC0363 копия (2).jpg"><input name="disposition" value="attachment"><input name="hash" value="Kz1th1FhmTe2h51+TgndHIzQGRBQy45zB4QT82Xmk+cSFNR9EoYm1ttOJvRBvs5yq/J6bpmRyOJonT3VoXnDag==:"><input name="limit" value="0"><input name="content_type" value="image/jpeg"><input name="owner_uid" value="30468971"><input name="fsize" value="13174611"><input name="hid" value="e6d4e99bf281029568be0a9f78d2ab0d"><input name="media_type" value="image"><input name="tknv" value="v2"></input>
-        //form.innerHTML:  <input name="uid" value="0"><input name="filename" value="_DSC0363 копия (2).jpg"><input name="disposition" value="attachment"><input name="hash" value="Kz1th1FhmTe2h51+TgndHIzQGRBQy45zB4QT82Xmk+cSFNR9EoYm1ttOJvRBvs5yq/J6bpmRyOJonT3VoXnDag==:"><input name="limit" value="0"><input name="content_type" value="image/jpeg"><input name="owner_uid" value="30468971"><input name="fsize" value="13174611"><input name="hid" value="e6d4e99bf281029568be0a9f78d2ab0d"><input name="media_type" value="image"><input name="tknv" value="v2"></input>
-        // document.body.appendChild(form);
-        // form.submit();
-
-        downloadViaForm(urlDownload.href);
+        const blob = await downloadResponse.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
       } catch (error: any) {
         setMessage(error.message);
       } finally {
