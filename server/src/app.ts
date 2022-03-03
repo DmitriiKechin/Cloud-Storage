@@ -26,6 +26,16 @@ app.use(
   '/api/proxy',
   proxy('https://downloader.disk.yandex.ru', {
     parseReqBody: false,
+    userResDecorator: (proxyRes, proxyResData) => {
+      console.log('proxyRes: ', proxyRes);
+      console.log('_data', proxyResData);
+
+      return proxyResData;
+    },
+    proxyReqPathResolver: (req) => {
+      console.log(req.url);
+      return req.url;
+    },
   })
 );
 
