@@ -182,12 +182,7 @@ const APIProvider: React.FC = ({ children }) => {
         let url = new URL(urlDownload);
 
         const downloadResponse = await fetch(
-          `/api/proxy${url.toString().slice(url.origin.length)}`,
-          {
-            headers: {
-              authorization: 'Alex',
-            },
-          }
+          `/api/proxy${url.toString().slice(url.origin.length)}`
         );
 
         if (!downloadResponse.ok) {
