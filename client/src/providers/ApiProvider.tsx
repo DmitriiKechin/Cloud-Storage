@@ -182,14 +182,7 @@ const APIProvider: React.FC = ({ children }) => {
         let url = new URL(urlDownload);
 
         const downloadResponse = await fetch(
-          `/api/proxy${
-            (url.toString().slice(url.origin.length),
-            {
-              headers: {
-                authorization: 'Alex',
-              },
-            })
-          }`
+          `/api/proxy${url.toString().slice(url.origin.length)}`
         );
 
         if (!downloadResponse.ok) {
@@ -197,7 +190,9 @@ const APIProvider: React.FC = ({ children }) => {
         }
 
         const blob = await downloadResponse.blob();
+        console.log('blob: ', blob);
         const downloadUrl = window.URL.createObjectURL(blob);
+        console.log('downloadUrl: ', downloadUrl);
         const link = document.createElement('a');
         link.href = downloadUrl;
         link.download = fileName;
