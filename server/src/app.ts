@@ -27,6 +27,11 @@ app.use(
   proxy('https://downloader.disk.yandex.ru', {
     parseReqBody: false,
     https: true,
+    userResHeaderDecorator: (headers) => {
+      headers['Access-Control-Allow-Origin'] = '*';
+      headers['Access-Control-Allow-Methods'] = 'GET, PUT, PATCH, POST, DELETE';
+      return headers;
+    },
     proxyReqOptDecorator: (reqOpts) => {
       reqOpts.headers = { Authorization: 'OAuth ' + process.env.YANDEX_TOKEN };
       return reqOpts;
