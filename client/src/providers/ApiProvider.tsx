@@ -182,7 +182,8 @@ const APIProvider: React.FC = ({ children }) => {
         let url = new URL(urlDownload);
 
         const downloadResponse = await fetch(
-          `/api/proxy${url.toString().slice(url.origin.length)}`
+          `/api/proxy${url.toString().slice(url.origin.length)}`,
+          { mode: 'no-cors' }
         );
 
         if (!downloadResponse.ok) {
