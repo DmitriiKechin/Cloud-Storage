@@ -54,7 +54,10 @@ app.use(
       return headers;
     },
     proxyReqOptDecorator: (reqOpts) => {
-      reqOpts.headers = { Authorization: 'OAuth ' + process.env.YANDEX_TOKEN };
+      reqOpts.headers = {
+        Authorization: 'OAuth ' + process.env.YANDEX_TOKEN,
+        Origin: 'http://localhost:3000',
+      };
       return reqOpts;
     },
   })
