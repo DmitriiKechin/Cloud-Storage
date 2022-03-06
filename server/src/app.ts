@@ -7,9 +7,11 @@ import shareRouter from './routes/share.routes';
 import dotenv from 'dotenv';
 import path from 'path';
 import proxy from 'express-http-proxy';
+// import { createProxyMiddleware } from 'http-proxy-middleware';
 
 dotenv.config();
 
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const fileUpload = require('express-fileupload');
 
 const app = express();
@@ -24,20 +26,31 @@ app.use('/api/share', shareRouter);
 
 app.use(
   '/api/proxy',
-  proxy('https://downloader.disk.yandex.ru', {
-    parseReqBody: false,
-    https: true,
-    userResHeaderDecorator: (headers) => {
-      headers['Access-Control-Allow-Origin'] = '*';
-      headers['Access-Control-Allow-Methods'] = 'GET, PUT, PATCH, POST, DELETE';
-      return headers;
-    },
-    proxyReqOptDecorator: (reqOpts) => {
-      reqOpts.headers = { Authorization: 'OAuth ' + process.env.YANDEX_TOKEN };
-      return reqOpts;
+  createProxyMiddleware({
+    target: 'https://downloader.disk.yandex.ru',
+    changeOrigin: true,
+    pathRewrite: {
+      [`^/api/proxy`]: '',
     },
   })
 );
+
+// app.use(
+//   '/api/proxy',
+//   proxy('https://downloader.disk.yandex.ru', {
+//     parseReqBody: false,
+//     https: true,
+//     userResHeaderDecorator: (headers) => {
+//       headers['Access-Control-Allow-Origin'] = '*';
+//       headers['Access-Control-Allow-Methods'] = 'GET, PUT, PATCH, POST, DELETE';
+//       return headers;
+//     },
+//     proxyReqOptDecorator: (reqOpts) => {
+//       reqOpts.headers = { Authorization: 'OAuth ' + process.env.YANDEX_TOKEN };
+//       return reqOpts;
+//     },
+//   })
+// );
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(path.join(__dirname, '../../client', 'build')));
