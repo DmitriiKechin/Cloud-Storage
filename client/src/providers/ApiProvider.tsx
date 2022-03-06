@@ -185,6 +185,7 @@ const APIProvider: React.FC = ({ children }) => {
           'https://sleepy-earth-89227.herokuapp.com/' + urlDownload,
           {
             headers: {
+              authorization: 'ivan',
               origin: 'http://localhost:3000/',
               'X-Requested-With': 'XMLHttpRequest',
             },
