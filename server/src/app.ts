@@ -11,7 +11,10 @@ import proxy from 'express-http-proxy';
 
 dotenv.config();
 
-const { createProxyMiddleware } = require('http-proxy-middleware');
+import cors from 'cors';
+const server = express();
+server.use(cors());
+// const { createProxyMiddleware } = require('http-proxy-middleware');
 const fileUpload = require('express-fileupload');
 
 const app = express();
@@ -24,33 +27,33 @@ app.use('/api/auth', authRouter);
 app.use('/api/files', fileRouter);
 app.use('/api/share', shareRouter);
 
-app.use(
-  '/api/proxy',
-  createProxyMiddleware({
-    target: 'https://downloader.disk.yandex.ru',
-    changeOrigin: true,
-    pathRewrite: {
-      [`^/api/proxy`]: '',
-    },
-  })
-);
-
 // app.use(
 //   '/api/proxy',
-//   proxy('https://downloader.disk.yandex.ru', {
-//     parseReqBody: false,
-//     https: true,
-//     userResHeaderDecorator: (headers) => {
-//       headers['Access-Control-Allow-Origin'] = '*';
-//       headers['Access-Control-Allow-Methods'] = 'GET, PUT, PATCH, POST, DELETE';
-//       return headers;
-//     },
-//     proxyReqOptDecorator: (reqOpts) => {
-//       reqOpts.headers = { Authorization: 'OAuth ' + process.env.YANDEX_TOKEN };
-//       return reqOpts;
+//   createProxyMiddleware({
+//     target: 'https://downloader.disk.yandex.ru',
+//     changeOrigin: true,
+//     pathRewrite: {
+//       [`^/api/proxy`]: '',
 //     },
 //   })
 // );
+
+app.use(
+  '/api/proxy',
+  proxy('https://downloader.disk.yandex.ru', {
+    parseReqBody: false,
+    https: true,
+    userResHeaderDecorator: (headers) => {
+      headers['Access-Control-Allow-Origin'] = '*';
+      headers['Access-Control-Allow-Methods'] = 'GET, PUT, PATCH, POST, DELETE';
+      return headers;
+    },
+    proxyReqOptDecorator: (reqOpts) => {
+      reqOpts.headers = { Authorization: 'OAuth ' + process.env.YANDEX_TOKEN };
+      return reqOpts;
+    },
+  })
+);
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(path.join(__dirname, '../../client', 'build')));
