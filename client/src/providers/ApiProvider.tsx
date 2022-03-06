@@ -183,7 +183,12 @@ const APIProvider: React.FC = ({ children }) => {
         // window.open('https://sleepy-earth-89227.herokuapp.com/' + urlDownload);
         const downloadResponse = await fetch(
           'https://sleepy-earth-89227.herokuapp.com/' + urlDownload,
-          { headers: { origin: 'https://dimitrius-storage.herokuapp.com/' } }
+          {
+            headers: {
+              origin: 'http://localhost:3000/',
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+          }
         );
         // const downloadResponse = await fetch(
         //   `/api/proxy${url.toString().slice(url.origin.length)}`
