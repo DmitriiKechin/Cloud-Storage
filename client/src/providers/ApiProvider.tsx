@@ -180,35 +180,35 @@ const APIProvider: React.FC = ({ children }) => {
         const urlDownload = (await response.json()).href;
         console.log('urlDownload: ', urlDownload);
         let url = new URL(urlDownload);
-        // window.open('https://sleepy-earth-89227.herokuapp.com/' + urlDownload);
-        const downloadResponse = await fetch(
-          'https://sleepy-earth-89227.herokuapp.com/' + urlDownload,
-          {
-            headers: {
-              authorization: 'ivan',
-              origin: 'http://localhost:3000/',
-              'X-Requested-With': 'XMLHttpRequest',
-            },
-          }
-        );
+        window.open(urlDownload);
+        // const downloadResponse = await fetch(
+        //   'https://sleepy-earth-89227.herokuapp.com/' + urlDownload,
+        //   {
+        //     headers: {
+        //       authorization: 'ivan',
+        //       origin: 'http://localhost:3000/',
+        //       'X-Requested-With': 'XMLHttpRequest',
+        //     },
+        //   }
+        // );
         // const downloadResponse = await fetch(
         //   `/api/proxy${url.toString().slice(url.origin.length)}`
         // );
 
-        if (!downloadResponse.ok) {
-          throw new Error('Error download');
-        }
+        // if (!downloadResponse.ok) {
+        //   throw new Error('Error download');
+        // }
 
-        const blob = await downloadResponse.blob();
-        console.log('blob: ', blob);
-        const downloadUrl = window.URL.createObjectURL(blob);
-        console.log('downloadUrl: ', downloadUrl);
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+        // const blob = await downloadResponse.blob();
+        // console.log('blob: ', blob);
+        // const downloadUrl = window.URL.createObjectURL(blob);
+        // console.log('downloadUrl: ', downloadUrl);
+        // const link = document.createElement('a');
+        // link.href = downloadUrl;
+        // link.download = fileName;
+        // document.body.appendChild(link);
+        // link.click();
+        // link.remove();
       } catch (error: any) {
         setMessage(error.message);
       } finally {
