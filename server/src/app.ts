@@ -12,14 +12,19 @@ import proxy from 'express-http-proxy';
 dotenv.config();
 
 import cors from 'cors';
-const server = express();
-server.use(cors());
+const corsOptions = {
+  origin: '*',
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
 // const { createProxyMiddleware } = require('http-proxy-middleware');
 const fileUpload = require('express-fileupload');
 
 const app = express();
 const PORT: string | number = process.env.PORT || 5000;
 
+app.use(cors(corsOptions));
 app.use(fileUpload());
 app.use(express.json());
 
