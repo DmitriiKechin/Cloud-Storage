@@ -180,10 +180,14 @@ const APIProvider: React.FC = ({ children }) => {
         const urlDownload = (await response.json()).href;
         console.log('urlDownload: ', urlDownload);
         let url = new URL(urlDownload);
-
+        // window.open('https://sleepy-earth-89227.herokuapp.com/' + urlDownload);
         const downloadResponse = await fetch(
-          `/api/proxy${url.toString().slice(url.origin.length)}`
+          'https://sleepy-earth-89227.herokuapp.com/' + urlDownload,
+          { headers: { origin: 'https://dimitrius-storage.herokuapp.com/' } }
         );
+        // const downloadResponse = await fetch(
+        //   `/api/proxy${url.toString().slice(url.origin.length)}`
+        // );
 
         if (!downloadResponse.ok) {
           throw new Error('Error download');
