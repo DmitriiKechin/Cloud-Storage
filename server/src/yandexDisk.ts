@@ -45,23 +45,24 @@ export const getUplodLink = async (path: string): Promise<string> => {
   return link.href;
 };
 
-export const getDownloadLink = async (
-  path: string
-): Promise<{ public_key: string }> => {
-  await request(
-    `https://cloud-api.yandex.net/v1/disk/resources/publish?path=${path}`,
-    'PUT'
-  );
-  const publicKey = await request(
-    `https://cloud-api.yandex.net/v1/disk/resources?path=${path}&fields=public_key`
-  );
-
+export const getDownloadLink = async (path: string): Promise<string> => {
   const urlDownload = await request(
-    `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${encodeURIComponent(
-      publicKey.public_key
-    )}`
+    `https://cloud-api.yandex.net/v1/disk/resources/download?path=${path}`
   );
-  console.log('urlDownload: ', urlDownload.href);
+  console.log('urlDownload: ', urlDownload);
+  // await request(
+  //   `https://cloud-api.yandex.net/v1/disk/resources/publish?path=${path}`,
+  //   'PUT'
+  // );
+  // const publicKey = await request(
+  //   `https://cloud-api.yandex.net/v1/disk/resources?path=${path}&fields=public_key`
+  // );
+
+  // const urlDownload = await request(
+  //   `https://cloud-api.yandex.net/v1/disk/public/resources/download?public_key=${encodeURIComponent(
+  //     publicKey.public_key
+  //   )}`
+  // );
 
   // setTimeout(() => {
   //   request(
@@ -70,7 +71,7 @@ export const getDownloadLink = async (
   //   );
   // }, 1000 * 60 * 1);
 
-  return urlDownload;
+  return urlDownload.href;
 };
 
 export const createFolderYandexDisk = async (path: string) => {

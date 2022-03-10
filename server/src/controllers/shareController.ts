@@ -37,9 +37,7 @@ class ShareController {
       //   res.status(500).json({ message: 'Can not get file' });
       // }
 
-      ShareController.publicKey = (
-        await yandexDisk.getDownloadLink(path)
-      ).public_key;
+      ShareController.publicKey = await yandexDisk.getDownloadLink(path);
 
       setTimeout(() => {
         ShareController.publicKey = '';

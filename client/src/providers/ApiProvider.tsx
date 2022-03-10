@@ -177,9 +177,9 @@ const APIProvider: React.FC = ({ children }) => {
           throw new Error('Error download');
         }
 
-        const urlDownload = (await response.json()).href;
-        console.log('urlDownload: ', urlDownload);
-        let url = new URL(urlDownload);
+        // const urlDownload = (await response.json()).href;
+        // console.log('urlDownload: ', urlDownload);
+        // let url = new URL(urlDownload);
         // window.open(urlDownload);
         // const downloadResponse = await fetch(
         //   'https://sleepy-earth-89227.herokuapp.com/' + urlDownload,
@@ -191,18 +191,16 @@ const APIProvider: React.FC = ({ children }) => {
         //     },
         //   }
         // );
-        const downloadResponse = await fetch(
-          `/api/proxy${url.toString().slice(url.origin.length)}`
-        );
+        // const downloadResponse = await fetch(
+        //   `/api/proxy${url.toString().slice(url.origin.length)}`
+        // );
 
-        if (!downloadResponse.ok) {
-          throw new Error('Error download');
-        }
+        // if (!downloadResponse.ok) {
+        //   throw new Error('Error download');
+        // }
 
-        const blob = await downloadResponse.blob();
-        console.log('blob: ', blob);
+        const blob = await response.blob();
         const downloadUrl = window.URL.createObjectURL(blob);
-        console.log('downloadUrl: ', downloadUrl);
         const link = document.createElement('a');
         link.href = downloadUrl;
         link.download = fileName;

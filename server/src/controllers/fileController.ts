@@ -10,6 +10,8 @@ import * as yandexDisk from '../yandexDisk';
 import path from 'path';
 import { IFile, IShare, IUser } from '../types/types';
 
+const fetch = require('node-fetch');
+
 const FileController = {
   async renameFile(
     req: express.Request,
@@ -270,8 +272,25 @@ const FileController = {
       const path: string =
         config.get('filePath') + '/' + req.user?.id + '/' + file.path;
 
-      const publicKey = await yandexDisk.getDownloadLink(path);
-      return res.json(publicKey);
+      const downloadLink = await yandexDisk.getDownloadLink(path);
+
+      const response = await fetch(downloadLink);
+      // fetch(downloadLink)
+      //   .then((response: { body: any }) => response.body)
+      //   .then(
+      //     (res: { (arg0: any): void; (arg0: any): void; on: any; read: any }) =>
+      //       res.on('readable', () => {
+      //         let chunk;
+      //         while (null !== (chunk = res.read())) {
+      //           console.log(chunk.toString());
+      //           res(chunk);
+      //         }
+      //       })
+      //   )
+      //   .catch((err: any) => console.log(err));
+      // // const reader = response.body.getReader();
+      response.body.pipe(res);
+      // return reader.pipe(res);
     } catch (e: any) {
       console.log(e);
       res.status(500).json({ message: 'Download error' });

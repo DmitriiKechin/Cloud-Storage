@@ -43,24 +43,24 @@ app.use('/api/share', shareRouter);
 //   })
 // );
 
-app.use(
-  '/api/proxy',
-  proxy('https://downloader.disk.yandex.ru', {
-    parseReqBody: false,
-    https: true,
-    userResHeaderDecorator: (headers) => {
-      headers['Access-Control-Allow-Origin'] = '*';
-      headers['Access-Control-Allow-Methods'] = 'GET, PUT, PATCH, POST, DELETE';
-      return headers;
-    },
-    proxyReqOptDecorator: (reqOpts) => {
-      reqOpts.headers = {
-        credentials: 'include',
-      };
-      return reqOpts;
-    },
-  })
-);
+// app.use(
+//   '/api/proxy',
+//   proxy('https://downloader.disk.yandex.ru', {
+//     parseReqBody: false,
+//     https: true,
+//     userResHeaderDecorator: (headers) => {
+//       headers['Access-Control-Allow-Origin'] = '*';
+//       headers['Access-Control-Allow-Methods'] = 'GET, PUT, PATCH, POST, DELETE';
+//       return headers;
+//     },
+//     proxyReqOptDecorator: (reqOpts) => {
+//       reqOpts.headers = {
+//         credentials: 'include',
+//       };
+//       return reqOpts;
+//     },
+//   })
+// );
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/', express.static(path.join(__dirname, '../../client', 'build')));
