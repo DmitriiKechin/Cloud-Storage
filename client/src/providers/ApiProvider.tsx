@@ -165,47 +165,64 @@ const APIProvider: React.FC = ({ children }) => {
   );
 
   const downloadFile = useCallback(
-    async (id: string, fileName: string): Promise<void> => {
+    async (
+      id: string,
+      fileName: string,
+      setProgress: React.Dispatch<React.SetStateAction<number>>,
+      callBack: () => void
+    ): Promise<void> => {
       try {
+        console.log('download');
         const response = await fetch(`/api/files/download?id=${id}`, {
           headers: {
             authorization: token || 'null',
           },
         });
 
-        if (!response.ok) {
+        if (!response.ok || response.body === null) {
           throw new Error('Error download');
         }
 
-        // const urlDownload = (await response.json()).href;
-        // console.log('urlDownload: ', urlDownload);
-        // let url = new URL(urlDownload);
-        // window.open(urlDownload);
-        // const downloadResponse = await fetch(
-        //   'https://sleepy-earth-89227.herokuapp.com/' + urlDownload,
-        //   {
-        //     headers: {
-        //       authorization: 'ivan',
-        //       origin: 'http://localhost:3000/',
-        //       'X-Requested-With': 'XMLHttpRequest',
-        //     },
-        //   }
-        // );
-        // const downloadResponse = await fetch(
-        //   `/api/proxy${url.toString().slice(url.origin.length)}`
-        // );
+        const reader = response.body.getReader();
 
-        // if (!downloadResponse.ok) {
-        //   throw new Error('Error download');
-        // }
+        // Шаг 2: получаем длину содержимого ответа
+        let contentLength: string | number | null =
+          response.headers.get('Content-Length');
+        console.log('contentLength: ', contentLength);
+        if (!contentLength) {
+          throw new Error('Ошибка загрузки');
+        }
 
-        const blob = await response.blob();
+        contentLength = +contentLength;
+
+        // Шаг 3: считываем данные:
+        let receivedLength = 0; // количество байт, полученных на данный момент
+        let chunks = [];
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (!value) {
+            break;
+          }
+
+          if (done) {
+            break;
+          }
+
+          chunks.push(value);
+          receivedLength += value.length;
+          setProgress((100 * receivedLength) / contentLength);
+          // console.log(`Получено ${receivedLength} из ${contentLength}`);
+        }
+
+        let blob = new Blob(chunks);
         const downloadUrl = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadUrl;
         link.download = fileName;
-        document.body.appendChild(link);
+        document.body.append(link);
         link.click();
+        callBack();
         link.remove();
       } catch (error: any) {
         setMessage(error.message);

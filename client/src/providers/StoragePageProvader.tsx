@@ -39,6 +39,12 @@ const StoragePageProvider: React.FC = ({ children }) => {
   );
 
   const [uploadedFiles, setUploadedFiles] = useState<ILoadedFile[]>([]);
+  const [downloadedFiles, setDownloadedFiles] = useState<
+    {
+      id: string;
+      name: string;
+    }[]
+  >([]);
 
   const openFolderHandler = (id: string): void => {
     setCurrentFolder(id);
@@ -68,9 +74,12 @@ const StoragePageProvider: React.FC = ({ children }) => {
       setIsTable,
       uploadedFiles,
       setUploadedFiles,
+      downloadedFiles,
+      setDownloadedFiles,
     }),
     [
       currentFolder,
+      downloadedFiles,
       isTable,
       parentFolder,
       target,

@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
 import useStoragePage from '../hooks/storagePage.hook';
-import FileLoader from './FileLoader';
+import FileDownloader from './FileDownload';
+import FileLoader from './FileUploader';
 
 const Wrapper = styled.div<{ visible: boolean }>`
   width: 15rem;
@@ -58,12 +59,18 @@ const Wrapper = styled.div<{ visible: boolean }>`
 interface IUploadManager {}
 
 export const UploadManager: React.FC<IUploadManager> = () => {
-  const { uploadedFiles, setUploadedFiles, openFolderHandler, currentFolder } =
-    useStoragePage();
+  const {
+    downloadedFiles,
+    setDownloadedFiles,
+    uploadedFiles,
+    setUploadedFiles,
+    openFolderHandler,
+    currentFolder,
+  } = useStoragePage();
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    if (uploadedFiles.length === 0) {
+    if (uploadedFiles.length === 0 && downloadedFiles.length === 0) {
       setIsVisible(false);
       openFolderHandler('');
       setTimeout(() => {
@@ -72,14 +79,25 @@ export const UploadManager: React.FC<IUploadManager> = () => {
     } else {
       setIsVisible(true);
     }
-  }, [setUploadedFiles, uploadedFiles.length]); //иначе много перевызовов
+  }, [
+    setUploadedFiles,
+    uploadedFiles.length,
+    setDownloadedFiles,
+    downloadedFiles.length,
+  ]); //иначе много перевызовов
 
   const getFiles = useMemo(() => {
-    return uploadedFiles.map((file) => {
+    const uploaded = uploadedFiles.map((file) => {
       const key = file.name + '%_%' + file.size;
       return <FileLoader key={key} file={file} />;
     });
-  }, [uploadedFiles]);
+
+    const downloaded = downloadedFiles.map((file) => {
+      return <FileDownloader key={file.id} id={file.id} name={file.name} />;
+    });
+
+    return [...uploaded, ...downloaded];
+  }, [uploadedFiles, downloadedFiles]);
 
   return <Wrapper visible={isVisible}>{getFiles}</Wrapper>;
 };

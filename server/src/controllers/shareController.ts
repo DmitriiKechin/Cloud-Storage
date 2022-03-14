@@ -1,14 +1,48 @@
 import express from 'express';
-import fs from 'fs';
 import config from 'config';
 import File from '../models/File';
 import Share from '../models/Share';
 import * as yandexDisk from '../yandexDisk';
-import path1 from 'path';
+import path from 'path';
 import { IShare } from '../types/types';
 
+const fetch = require('node-fetch');
+
 class ShareController {
-  static publicKey = '';
+  static async getDownloadPage(
+    req: express.Request,
+    res: express.Response
+  ): Promise<express.Response | void> {
+    let { id } = req.query;
+    let name = 'Can not get file';
+
+    const shareLink: IShare | null = await Share.findOne({ _id: id });
+
+    if (!shareLink) {
+      id = '0';
+      return res.render(
+        path.resolve(__dirname, '../../../client', 'build', 'download.ejs'),
+        { id, name }
+      );
+    }
+
+    const file = await File.findById(shareLink.file);
+
+    if (!file) {
+      id = '0';
+      return res.render(
+        path.resolve(__dirname, '../../../client', 'build', 'download.ejs'),
+        { id, name }
+      );
+    }
+
+    name = file.name;
+
+    return res.render(
+      path.resolve(__dirname, '../../../client', 'build', 'download.ejs'),
+      { id, name }
+    );
+  }
 
   static async getFile(
     req: express.Request,
@@ -30,32 +64,19 @@ class ShareController {
       }
 
       const path: string =
-        // config.get('filePath') + '\\' + shareLink.user + '\\' + file.path;
         config.get('filePath') + '/' + shareLink.user + '/' + file.path;
 
-      // if (!fs.existsSync(path)) {
-      //   res.status(500).json({ message: 'Can not get file' });
-      // }
+      const downloadLink = await yandexDisk.getDownloadLink(path);
+      const response = await fetch(downloadLink);
 
-      ShareController.publicKey = await yandexDisk.getDownloadLink(path);
-
-      setTimeout(() => {
-        ShareController.publicKey = '';
-      }, 5000);
-
-      res.sendFile(
-        path1.resolve(__dirname, '../../../client', 'build', 'download.html')
-      );
+      if (!response.ok) {
+        return res.status(400).json({ message: 'Download error/not file' });
+      }
+      res.set('Content-Length', response.headers.get('Content-Length'));
+      response.body.pipe(res);
     } catch (e: any) {
       return res.status(500).json({ message: 'Can not get file' });
     }
-  }
-
-  static getLinkDownload(req: express.Request, res: express.Response) {
-    if (!ShareController.publicKey) {
-      return res.status(500).json({ message: 'Can not get file' });
-    }
-    return res.json({ link: ShareController.publicKey });
   }
 }
 

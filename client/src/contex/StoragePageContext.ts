@@ -30,6 +30,11 @@ interface IStoragePageContext {
 
   uploadedFiles: ILoadedFile[];
   setUploadedFiles: React.Dispatch<React.SetStateAction<ILoadedFile[]>>;
+
+  downloadedFiles: { id: string; name: string }[];
+  setDownloadedFiles: React.Dispatch<
+    React.SetStateAction<{ id: string; name: string }[]>
+  >;
 }
 
 export const StoragePageContext = createContext<IStoragePageContext>({
@@ -55,4 +60,6 @@ export const StoragePageContext = createContext<IStoragePageContext>({
   setIsTable: () => {},
   uploadedFiles: [],
   setUploadedFiles: () => {},
+  downloadedFiles: [],
+  setDownloadedFiles: () => {},
 });

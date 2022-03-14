@@ -273,24 +273,13 @@ const FileController = {
         config.get('filePath') + '/' + req.user?.id + '/' + file.path;
 
       const downloadLink = await yandexDisk.getDownloadLink(path);
-
       const response = await fetch(downloadLink);
-      // fetch(downloadLink)
-      //   .then((response: { body: any }) => response.body)
-      //   .then(
-      //     (res: { (arg0: any): void; (arg0: any): void; on: any; read: any }) =>
-      //       res.on('readable', () => {
-      //         let chunk;
-      //         while (null !== (chunk = res.read())) {
-      //           console.log(chunk.toString());
-      //           res(chunk);
-      //         }
-      //       })
-      //   )
-      //   .catch((err: any) => console.log(err));
-      // // const reader = response.body.getReader();
+
+      if (!response.ok) {
+        return res.status(400).json({ message: 'Download error/not file' });
+      }
+      res.set('Content-Length', response.headers.get('Content-Length'));
       response.body.pipe(res);
-      // return reader.pipe(res);
     } catch (e: any) {
       console.log(e);
       res.status(500).json({ message: 'Download error' });

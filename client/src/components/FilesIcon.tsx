@@ -126,9 +126,7 @@ const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
 
   useEffect(() => {
     (async () => {
-      console.log('Storage getFiles');
       if (currentFolder) {
-        console.log('currentFolder: ', currentFolder);
         const files = await api!.file.getFiles(currentFolder, typeSort);
         setStorageFiles(files || []);
       }

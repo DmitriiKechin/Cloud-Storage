@@ -3,7 +3,7 @@ import ShareController from '../controllers/shareController';
 
 const router = Router();
 
-router.get('', ShareController.getFile);
-router.get('/getPublicKey', ShareController.getLinkDownload);
+router.get('', ShareController.getDownloadPage);
+router.get('/getDownload', ShareController.getFile);
 
 export default router;

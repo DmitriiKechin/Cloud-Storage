@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/style.css" rel="stylesheet" />
+    <title>Download</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <h1>Download</h1>
+      <div class="line"></div>
+      <h3><%= name %></h3>
+      <div id="id"><%= id %></div>
+      <button id="DownloadButton">Download</button>
+      <div class="progressBar" hidden>
+        <div class="progress"></div>
+      </div>
+    </div>
+    <script defer>
+      const button = document.getElementById('DownloadButton');
+      const id = document.getElementById('id').textContent;
+      const name = document.querySelector('h3').textContent;
+      const progress = document.querySelector('.progress');
+      const progressBar = document.querySelector('.progressBar');
+
+      if (id === '0') {
+        button.disabled = true;
+      }
+
+      const download = async () => {
+        progressBar.hidden = false;
+        progress.style.width = 0;
+        try {
+          const response = await fetch(`/api/share/getDownload?id=${id}`);
+          if (!response.ok || response.body === null) {
+            throw new Error('Error download');
+          }
+          const reader = response.body.getReader();
+          let contentLength = response.headers.get('Content-Length');
+
+          if (!contentLength) {
+            throw new Error('Ошибка загрузки');
+          }
+
+          contentLength = +contentLength;
+
+          let receivedLength = 0;
+          let chunks = [];
+
+          while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) {
+              break;
+            }
+
+            chunks.push(value);
+            receivedLength += value.length;
+            progress.style.width = (100 * receivedLength) / contentLength + '%';
+          }
+
+          let blob = new Blob(chunks);
+          const downloadUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = downloadUrl;
+          link.download = name;
+          document.body.append(link);
+          link.click();
+          link.remove();
+        } catch (err) {
+          const header = document.querySelector('h1');
+          header.textContent = 'Файл не найден';
+        }
+      };
+
+      button.addEventListener('click', download);
+    </script>
+  </body>
+</html>

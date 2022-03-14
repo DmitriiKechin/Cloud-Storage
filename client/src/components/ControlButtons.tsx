@@ -92,6 +92,8 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
     setTargetDate,
     setTargetName,
     setTargetSize,
+    setDownloadedFiles,
+    downloadedFiles,
   } = useStoragePage();
   const api = useApi();
 
@@ -106,6 +108,14 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
     openFolderHandler(currentFolder);
   };
 
+  const downloadFile = (id: string, name: string): void => {
+    let files = [...downloadedFiles];
+    files.push({ id, name });
+    console.log('files: ', files);
+    setDownloadedFiles(files);
+    files = [];
+  };
+
   return (
     <Wrapper parentType={parentType}>
       {targetType !== 'dir' ? (
@@ -113,7 +123,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
           parentType={parentType}
           dark
           click={() => {
-            api!.file.downloadFile(target.id, targetName);
+            downloadFile(target.id, targetName);
           }}
         >
           <SvgDownload />

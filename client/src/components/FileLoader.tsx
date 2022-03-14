@@ -1,12 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { Button } from '../elements/Button';
 import { Flex } from '../elements/Flex';
 import { SvgClose } from '../elements/svg/svgClose';
 import nameShort from '../global_Function/nameShort';
-import useApi from '../hooks/api.hook';
-import useStoragePage from '../hooks/storagePage.hook';
-import { ILoadedFile } from '../Types/types';
 import { Progressbar } from './Progressbar';
 
 const Wrapper = styled.div<{ visible: boolean }>`
@@ -33,64 +30,32 @@ const Title = styled.div`
 `;
 
 interface IFileLoader {
-  file: ILoadedFile;
+  title: string;
+  progress: number;
+  isVisible: boolean;
+  clickCloseHandler(): void;
 }
 
-const FileLoader: React.FC<IFileLoader> = ({ file }) => {
+const FileLoader: React.FC<IFileLoader> = ({
+  title,
+  progress,
+  isVisible,
+  clickCloseHandler,
+}) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const shortNameRef = useRef<string>();
-  const [progress, setProgress] = useState<number>(0);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-  const api = useApi();
-  const clear = useRef<() => void>();
-  const { currentFolder, setUploadedFiles } = useStoragePage();
-
-  const deleteUploadedFile = useCallback(() => {
-    setTimeout(() => {
-      setUploadedFiles((prev) => {
-        let files = [...prev];
-        const index = files.findIndex((uploadedFile) => {
-          return (
-            uploadedFile.name === file.name &&
-            uploadedFile.size === file.size &&
-            uploadedFile.lastModified === file.lastModified
-          );
-        });
-
-        files.splice(index, 1);
-        return files;
-      });
-    }, 300);
-  }, [file.lastModified, file.name, file.size, setUploadedFiles]);
-
-  useEffect(() => {
-    (async () => {
-      const formData = new FormData();
-      console.log('file', file);
-      formData.append('file', file);
-      formData.append('parent', currentFolder);
-
-      clear.current = await api!.file.uploadFile(formData, setProgress, () => {
-        deleteUploadedFile();
-        setIsVisible(false);
-      });
-
-      setIsVisible(true);
-    })();
-  }, []);
 
   useEffect(() => {
     if (titleRef.current) {
       const titleWidth = titleRef.current.clientWidth;
-      console.log('titleWidth: ', titleWidth);
       const rem = Number.parseFloat(getComputedStyle(document.body).fontSize);
       shortNameRef.current = nameShort(
-        file.name,
+        title,
         1,
         (25 * titleWidth * 25) / rem / 300
       );
     }
-  }, [file.name, titleRef?.current?.clientWidth]);
+  }, [title, titleRef?.current?.clientWidth]);
 
   return (
     <Wrapper visible={isVisible}>
@@ -100,16 +65,7 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
           height="1.1rem"
           width="1.1rem"
           padding="0"
-          click={() => {
-            if (!clear?.current) {
-              console.error('error clear');
-              return;
-            }
-
-            clear.current();
-            deleteUploadedFile();
-            setIsVisible(false);
-          }}
+          click={clickCloseHandler}
         >
           <SvgClose />
         </Button>
