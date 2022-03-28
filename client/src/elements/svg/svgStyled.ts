@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 interface ISvg {
+  padding?: string;
   dark?: boolean;
 }
 
@@ -27,6 +28,7 @@ export const PathSecondary = styled.path`
 export const StyledSVG = styled.svg.attrs<ISvg>({
   xmlns: 'http://www.w3.org/2000/svg',
 })<ISvg>`
+  padding: ${(props) => props.padding || '0'};
   fill: inherit;
   width: 100%;
   height: 100%;
