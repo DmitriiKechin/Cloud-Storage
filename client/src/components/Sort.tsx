@@ -146,7 +146,7 @@ export const Sort: React.FC<ISort> = () => {
   const [isActive, setIsActive] = useState<boolean[]>(isActiveDefault);
   return (
     <Wrapper>
-      <SvgSort />
+      <SvgSort padding="0.1rem" />
       <TypeSort
         isClicked={isClicked}
         onClick={(event: React.MouseEvent) => {

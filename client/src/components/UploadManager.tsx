@@ -29,6 +29,7 @@ const Wrapper = styled.div<{ visible: boolean }>`
   ${(props) =>
     !props.visible &&
     css`
+      display: none;
       width: 0;
       padding: 0;
     `}

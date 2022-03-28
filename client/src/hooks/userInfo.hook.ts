@@ -30,7 +30,7 @@ export const useUserInfo = (): IUserInfo => {
   const user: IUser = auth.user || userDefault;
   const userInfo: IUserInfo = {
     id: user._id,
-    avatarSrc: user.avatar || API_URL + 'UserDefault.svg',
+    avatarSrc: user.avatar || API_URL + '/UserDefault.svg',
     userName: user.email.split('@')[0],
     diskSpace: formattedSize(user.diskSpace),
     usedSpace: formattedSize(user.usedSpace),
