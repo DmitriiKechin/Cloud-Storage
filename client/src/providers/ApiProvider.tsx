@@ -135,7 +135,6 @@ const APIProvider: React.FC = ({ children }) => {
       }
 
       let xhr = new XMLHttpRequest();
-
       xhr.responseType = 'json';
 
       xhr.upload.onprogress = function (event) {
