@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { API_URL } from '../config';
 import { APIContext } from '../contex/ApiContext';
 import useAuth from '../hooks/auth.hook';
 import useMessage from '../hooks/message.hook';
@@ -41,7 +42,11 @@ const APIProvider: React.FC = ({ children }) => {
       headers['authorization'] = token || 'null';
 
       try {
-        const response: Response = await fetch(url, { method, body, headers });
+        const response: Response = await fetch(API_URL + url, {
+          method,
+          body,
+          headers,
+        });
         const data = await response.json();
 
         console.log('data: ', data);
@@ -152,10 +157,6 @@ const APIProvider: React.FC = ({ children }) => {
       xhr.open('PUT', url.href);
       xhr.send(dataYandex);
 
-      // xhr.open('POST', '/api/files/upload');
-      // xhr.setRequestHeader('authorization', token || '');
-      // xhr.send(data);
-
       token && auth(token, isAuthorization);
 
       const cancel = xhr.abort.bind(xhr);
@@ -172,8 +173,7 @@ const APIProvider: React.FC = ({ children }) => {
       callBack: () => void
     ): Promise<void> => {
       try {
-        console.log('download');
-        const response = await fetch(`/api/files/download?id=${id}`, {
+        const response = await fetch(API_URL + `/api/files/download?id=${id}`, {
           headers: {
             authorization: token || 'null',
           },
@@ -258,9 +258,6 @@ const APIProvider: React.FC = ({ children }) => {
     },
     [request]
   );
-  // useEffect(() => {
-  //   console.log('request');
-  // }, [request]);
 
   return (
     <APIContext.Provider

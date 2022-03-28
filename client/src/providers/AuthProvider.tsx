@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { API_URL } from '../config';
 import AuthContext from '../contex/AuthContext';
 import useMessage from '../hooks/message.hook';
 import {
@@ -70,7 +71,7 @@ const AuthProvider: React.FC = ({ children }) => {
       headers['authorization'] = token || 'null';
 
       try {
-        const response: Response = await fetch('/api/auth/auth', {
+        const response: Response = await fetch(API_URL + '/api/auth/auth', {
           method: 'GET',
           body: null,
           headers,
