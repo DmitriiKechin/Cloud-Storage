@@ -45,14 +45,16 @@ export const AuthPage: React.FC = () => {
   //   const data: IDataLogin = await api!.auth.registration({
   //     ...formDate,
   //   });
-  //   data && auth.login(data.token, data.user, auth.isAuthorization);
+  //   setTimeout(() => {
+  //     data && auth.login(data.token, data.user, auth.isAuthorization);
+  //   }, 1500);
   // };
 
   const testValuesOfLogin = (event: React.MouseEvent): void => {
     event.preventDefault();
     setFormDate({
-      email: 'test@test.com',
-      password: 'test',
+      email: 'demo@demo.ru',
+      password: 'demo',
     });
   };
 

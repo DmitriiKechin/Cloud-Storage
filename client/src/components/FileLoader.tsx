@@ -45,6 +45,44 @@ const FileLoader: React.FC<IFileLoader> = ({
   const titleRef = useRef<HTMLDivElement>(null);
   const shortNameRef = useRef<string>();
 
+  const [progress, setProgress] = useState<number>(0);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const api = useApi();
+  const clear = useRef<() => void>();
+  const { currentFolder, setUploadedFiles } = useStoragePage();
+
+  const deleteUploadedFile = useCallback(() => {
+    setTimeout(() => {
+      setUploadedFiles((prev) => {
+        let files = [...prev];
+        const index = files.findIndex((uploadedFile) => {
+          return (
+            uploadedFile.name === file.name &&
+            uploadedFile.size === file.size &&
+            uploadedFile.lastModified === file.lastModified
+          );
+        });
+
+        files.splice(index, 1);
+        return files;
+      });
+    }, 300);
+  }, [file.lastModified, file.name, file.size, setUploadedFiles]);
+
+  useEffect(() => {
+    const formData = new FormData();
+    console.log('file', file);
+    formData.append('file', file);
+    formData.append('parent', currentFolder);
+
+    clear.current = api!.file.uploadFile(formData, setProgress, () => {
+      deleteUploadedFile();
+      setIsVisible(false);
+    });
+
+    setIsVisible(true);
+  }, []);
+
   useEffect(() => {
     if (titleRef.current) {
       const titleWidth = titleRef.current.clientWidth;

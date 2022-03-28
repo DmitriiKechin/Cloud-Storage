@@ -6,7 +6,6 @@ import * as uuid from 'uuid';
 import File from '../models/File';
 import User from '../models/User';
 import Share from '../models/Share';
-import * as yandexDisk from '../yandexDisk';
 import path from 'path';
 import { IFile, IShare, IUser } from '../types/types';
 
@@ -35,9 +34,9 @@ const FileController = {
 
       return res.status(400).json({ message: 'Error rename' });
     }
-  },
+  }
 
-  async shareFile(
+  static async shareFile(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -74,9 +73,9 @@ const FileController = {
 
       return res.status(400).json({ message: 'Error share file' });
     }
-  },
+  }
 
-  async createDir(
+  static async createDir(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -117,9 +116,9 @@ const FileController = {
       console.log(e);
       return res.status(400).json({ message: 'Error create folder' });
     }
-  },
+  }
 
-  async getFiles(
+  static async getFiles(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -172,15 +171,18 @@ const FileController = {
     } catch (e: any) {
       return res.status(500).json({ message: 'Can not get files' });
     }
-  },
+  }
 
-  async uploadFile(
+  static async uploadFile(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
     try {
-      const { name } = req.body;
-      const size = +req.body.size;
+      const file = req.files.file;
+
+      if (!file) {
+        return res.status(500).json({ message: 'Upload error/not file' });
+      }
 
       const [parent, user] = await Promise.all([
         File.findOne({
@@ -194,19 +196,20 @@ const FileController = {
         return res.status(500).json({ message: 'Upload error/ User Error ' });
       }
 
-      if (user.usedSpace + size > user.diskSpace) {
+      if (user.usedSpace + file.size > user.diskSpace) {
         return res.status(400).json({ message: 'There no space on the disk' });
       }
 
-      user.usedSpace = user.usedSpace + size;
+      user.usedSpace = user.usedSpace + file.size;
       user.files++;
 
       let path;
-
       if (parent) {
-        path = `${config.get('filePath')}/${user._id}/${parent.path}/${name}`;
+        path = `${config.get('filePath')}/${user._id}/${parent.path}/${
+          file.name
+        }`;
       } else {
-        path = `${config.get('filePath')}/${user._id}/${name}`;
+        path = `${config.get('filePath')}/${user._id}/${file.name}`;
       }
 
       const link = await yandexDisk.getUplodLink(path);
@@ -218,20 +221,18 @@ const FileController = {
         filePath = parent.path + '/' + name;
       }
 
-      const isExistsFile = await File.findOne({
-        user: req.user?.id,
-        path: filePath,
-      });
+      const type: string = file.name.split('.').pop();
+      let filePath: string = file.name;
 
-      if (isExistsFile) {
-        return res.status(500).json({ message: 'file already exists' });
+      if (parent) {
+        filePath = parent.path + '/' + file.name;
       }
 
       const dbFile: IFile = new File({
-        name: name,
+        name: file.name,
         type,
         date: Date.now(),
-        size: size,
+        size: file.size,
         path: filePath,
         parent: parent?._id || user._id,
         user: user._id,
@@ -248,7 +249,9 @@ const FileController = {
         user.save(),
       ]);
 
-      return res.json({ href: link });
+      file.mv(path);
+
+      return res.json(dbFile);
     } catch (e: any) {
       console.log(e);
       return res.status(500).json({ message: 'Upload error' });
@@ -284,9 +287,9 @@ const FileController = {
       console.log(e);
       res.status(500).json({ message: 'Download error' });
     }
-  },
+  }
 
-  async deleteFile(
+  static async deleteFile(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -348,9 +351,9 @@ const FileController = {
       console.log(e);
       return res.status(500).json({ message: 'Delete error' });
     }
-  },
+  }
 
-  async uploadAvatar(
+  static async uploadAvatar(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -367,6 +370,7 @@ const FileController = {
       if (user.avatar) {
         const pathAvatar =
           path.join(__dirname, '../../../client', 'build') + '/' + user.avatar;
+
         if (fs.existsSync(pathAvatar)) {
           fs.unlinkSync(pathAvatar);
         }
@@ -377,6 +381,7 @@ const FileController = {
       file.mv(
         path.join(__dirname, '../../../client', 'build') + '/' + avatarName
       );
+
       user.avatar = avatarName;
       await user.save();
 
@@ -385,9 +390,9 @@ const FileController = {
       console.log(e);
       return res.status(400).json({ message: 'Upload avatar error' });
     }
-  },
+  }
 
-  async deleteAvatar(
+  static async deleteAvatar(
     req: express.Request,
     res: express.Response
   ): Promise<express.Response> {
@@ -403,6 +408,7 @@ const FileController = {
       fs.unlinkSync(
         path.join(__dirname, '../../../client', 'build') + '/' + user.avatar
       );
+
       user.avatar = '';
       await user.save();
       return res.json(user);
@@ -410,9 +416,9 @@ const FileController = {
       console.log(e);
       return res.status(400).json({ message: 'Upload avatar error' });
     }
-  },
+  }
 
-  async deleteFileChilds(file: IFile, user: IUser): Promise<void> {
+  static async deleteFileChilds(file: IFile, user: IUser): Promise<void> {
     const files = await File.find({
       user: file.user,
       parent: file._id,
@@ -442,9 +448,13 @@ const FileController = {
       await file.remove();
       await this.deleteFileChilds(file, user);
     });
-  },
+  }
 
-  async resizeParent(file: IFile, user: IUser, resize: number): Promise<void> {
+  static async resizeParent(
+    file: IFile,
+    user: IUser,
+    resize: number
+  ): Promise<void> {
     if (!file || !user || !resize) {
       return;
     }
@@ -464,5 +474,6 @@ const FileController = {
     this.resizeParent(parent, user, resize);
   },
 };
+
 
 export default FileController;

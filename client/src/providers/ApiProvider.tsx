@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { API_URL } from '../config';
 import { APIContext } from '../contex/ApiContext';
 import useAuth from '../hooks/auth.hook';
 import useMessage from '../hooks/message.hook';
@@ -41,7 +42,11 @@ const APIProvider: React.FC = ({ children }) => {
       headers['authorization'] = token || 'null';
 
       try {
-        const response: Response = await fetch(url, { method, body, headers });
+        const response: Response = await fetch(API_URL + url, {
+          method,
+          body,
+          headers,
+        });
         const data = await response.json();
 
         console.log('data: ', data);
@@ -112,23 +117,11 @@ const APIProvider: React.FC = ({ children }) => {
   );
 
   const uploadFile = useCallback(
-    async (
+    (
       data: FormData,
       setProgress: React.Dispatch<React.SetStateAction<number>>,
       callBack: () => void
     ) => {
-      const file: any = data.get('file');
-      const dataServer = {
-        size: file.size.toString(),
-        name: file.name,
-        parent: data.get('parent')?.toString() || '',
-      };
-      const url = await request('/api/files/upload', 'POST', dataServer);
-
-      if (!url) {
-        return () => {};
-      }
-
       let xhr = new XMLHttpRequest();
 
       xhr.responseType = 'json';
@@ -146,15 +139,9 @@ const APIProvider: React.FC = ({ children }) => {
         setMessage('');
       };
 
-      const dataYandex = new FormData();
-      dataYandex.append('file', file);
-      console.log('url', url);
-      xhr.open('PUT', url.href);
-      xhr.send(dataYandex);
-
-      // xhr.open('POST', '/api/files/upload');
-      // xhr.setRequestHeader('authorization', token || '');
-      // xhr.send(data);
+      xhr.open('POST', '/api/files/upload');
+      xhr.setRequestHeader('authorization', token || '');
+      xhr.send(data);
 
       token && auth(token, isAuthorization);
 
@@ -172,8 +159,7 @@ const APIProvider: React.FC = ({ children }) => {
       callBack: () => void
     ): Promise<void> => {
       try {
-        console.log('download');
-        const response = await fetch(`/api/files/download?id=${id}`, {
+        const response = await fetch(API_URL + `/api/files/download?id=${id}`, {
           headers: {
             authorization: token || 'null',
           },
@@ -258,9 +244,6 @@ const APIProvider: React.FC = ({ children }) => {
     },
     [request]
   );
-  // useEffect(() => {
-  //   console.log('request');
-  // }, [request]);
 
   return (
     <APIContext.Provider

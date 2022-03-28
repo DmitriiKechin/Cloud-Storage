@@ -1,7 +1,10 @@
 import React from 'react';
 import { PathPrimary, PathSecondary, StyledSVG } from './svgStyled';
 
-export const SvgSort: React.FC = ({ ...props }) => {
+export const SvgSort: React.FC<{
+  padding?: string;
+  dark?: boolean;
+}> = ({ ...props }) => {
   return (
     <StyledSVG {...props} viewBox="0 0 24 24">
       <PathPrimary d="M17,15V6.084c0-0.874,0.515-1.717,1.348-1.981C19.729,3.665,21,4.684,21,6v9H17z"></PathPrimary>

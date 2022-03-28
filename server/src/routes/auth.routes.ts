@@ -9,9 +9,7 @@ import { ILoginResponse, IUser } from '../types/types';
 import path from 'path';
 import fs from 'fs';
 
-dotenv.config();
 const secretPhrase = process.env.JWT_SECRET || '';
-
 const router = express.Router();
 
 interface IData {
@@ -19,40 +17,52 @@ interface IData {
   password: string;
 }
 
-// router.post(
-//   '/registration',
-//   [
-//     check('email', 'Uncorrect email').isEmail(),
-//     check('password', 'password must be longer than 3').isLength({ min: 3 }),
-//   ],
-//   async (req: express.Request, res: express.Response) => {
-//     const response: IRegistrationResponse = { message: '' };
+dotenv.config();
 
-//     try {
-//       const errors: object = validationResult(req);
+router.post(
+  '/registration',
+  [
+    check('email', 'Uncorrect email').isEmail(),
+    check('password', 'password must be longer than 3').isLength({ min: 3 }),
+  ],
+  async (req: express.Request, res: express.Response) => {
+    try {
+      const errors: object = validationResult(req);
 
-//       if (Object.keys(errors).length === 0) {
-//         return res.status(400).json((response.message = 'Uncorrect request'));
-//       }
-//       const { email, password }: IData = req.body;
+      if (Object.keys(errors).length === 0) {
+        return res.status(400).json({ message: 'Uncorrect request' });
+      }
+      const { email, password }: IData = req.body;
 
-//       const candidate: IUser | null = await User.findOne({ email });
+      const candidate: IUser | null = await User.findOne({ email });
 
-//       if (candidate) {
-//         response.message = `User with email ${email} already exist`;
-//         return res.status(400).json(response);
-//       }
-//       const hashPassword = await bcrypt.hash(password, 12);
-//       const user = new User({ email, password: hashPassword });
-//       await user.save();
-//       await FileService.createDir(new File({ user: user.id, name: '' }));
-//       res.status(201).json({ message: 'User was created' });
-//     } catch (e) {
-//       console.log(e);
-//       res.status(500).json({ message: 'Server error' });
-//     }
-//   }
-// );
+      if (candidate) {
+        return res
+          .status(400)
+          .json({ message: `User with email ${email} already exist` });
+      }
+      const hashPassword = await bcrypt.hash(password, 12);
+      const user = new User({ email, password: hashPassword });
+
+      FileService.createDir(new File({ user: user.id, name: '' }));
+      await user.save();
+
+      const token = jwt.sign({ id: user.id }, secretPhrase, {
+        expiresIn: '1h',
+      });
+
+      const response: ILoginResponse = { message: '' };
+      response.token = token;
+      response.user = user;
+      response.message = 'User was created';
+
+      res.status(201).json(response);
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+);
 
 router.post(
   '/login',

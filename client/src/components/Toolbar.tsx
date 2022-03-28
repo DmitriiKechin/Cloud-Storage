@@ -47,6 +47,7 @@ const Wrapper = styled.div`
 const GroupButtonsSecondary = styled.div`
   width: 100%;
   padding: 0.3rem 0;
+  height: 100%;
 
   display: flex;
   align-items: center;
@@ -129,6 +130,8 @@ export const Toolbar: React.FC<IToolbar> = () => {
         <GroupButtonsPrimery>
           <Button
             dark
+            width="3rem"
+            padding="0.1rem"
             click={() => {
               openFolderHandler(parentFolder[parentFolder.length - 1]);
               if (parentFolder.length > 1) {
@@ -141,11 +144,18 @@ export const Toolbar: React.FC<IToolbar> = () => {
           >
             <SvgUp />
           </Button>
-          <Button dark click={createFolderHandler}>
+          <Button
+            dark
+            width="3rem"
+            padding="0.1rem"
+            click={createFolderHandler}
+          >
             <SvgAddFolder />
           </Button>
           <FileLoad
             dark
+            width="3rem"
+            padding="0.1rem"
             changeHandler={async (event) => {
               uploadFile(event);
             }}
@@ -157,6 +167,8 @@ export const Toolbar: React.FC<IToolbar> = () => {
         <GroupButtonsSecondary>
           <Button
             dark
+            width="3rem"
+            padding="0.1rem"
             click={() => {
               setSettingUser({ isTable: !isTable });
               setIsTable((prev) => !prev);

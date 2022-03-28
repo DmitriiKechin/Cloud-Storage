@@ -103,6 +103,8 @@ export const UserMenu: React.FC<IUserMenu> = ({
               <TextTitle>{userName}</TextTitle>
               <Flex align="center" justify="space-around" width="100%">
                 <FileLoad
+                  padding="0.1rem"
+                  width="3rem"
                   load={loading}
                   validate={isSuccess}
                   changeHandler={uploadAvatar}
