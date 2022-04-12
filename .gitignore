@@ -5,4 +5,4 @@ static/**
 build
 .env
 logo.psd
-
+.DS_Store
