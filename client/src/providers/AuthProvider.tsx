@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { API_URL } from '../config';
 import AuthContext from '../contex/AuthContext';
-import useMessage from '../hooks/message.hook';
+import { useAction } from '../hooks/useAction';
 import {
   IDataLogin,
   ISettingUser,
@@ -19,7 +19,7 @@ interface IStorageUser {
 
 const AuthProvider: React.FC = ({ children }) => {
   const [token, setToken] = useState<stringOrNull>(null);
-  const { setMessage } = useMessage();
+  const { setMessage } = useAction();
   const [user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isAuthorization, setAuthorization] = useState(false);
@@ -87,7 +87,6 @@ const AuthProvider: React.FC = ({ children }) => {
         console.log('logout');
         setMessage(e.message);
         logout();
-        setMessage('');
       }
     },
     [login, logout, setMessage]

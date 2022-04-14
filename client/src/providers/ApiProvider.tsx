@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import { API_URL } from '../config';
 import { APIContext } from '../contex/ApiContext';
 import useAuth from '../hooks/auth.hook';
-import useMessage from '../hooks/message.hook';
 import useRequest from '../hooks/request.hook';
+import { useAction } from '../hooks/useAction';
 import { IDataLogin, IFile, ObjectString, typeSort } from '../Types/types';
 
 type IMethod =
@@ -19,7 +19,7 @@ type IMethod =
 
 const APIProvider: React.FC = ({ children }) => {
   const { token, isAuthorization, auth, logout, setSettingUser } = useAuth();
-  const { setMessage } = useMessage();
+  const { setMessage } = useAction();
   const { setLoading, setIsSuccess } = useRequest();
 
   const request = useCallback(
@@ -68,7 +68,6 @@ const APIProvider: React.FC = ({ children }) => {
         setMessage(e.message);
       } finally {
         setLoading(false);
-        setMessage('');
       }
     },
     [auth, isAuthorization, setIsSuccess, setLoading, setMessage, token]
@@ -136,7 +135,6 @@ const APIProvider: React.FC = ({ children }) => {
         if (xhr.status > 299) {
           setMessage(xhr.response?.message || 'Unknown error');
         }
-        setMessage('');
       };
 
       xhr.open('POST', '/api/files/upload');
@@ -175,7 +173,6 @@ const APIProvider: React.FC = ({ children }) => {
       } catch (error: any) {
         setMessage(error.message);
       } finally {
-        setMessage('');
       }
     },
     [setMessage, token]

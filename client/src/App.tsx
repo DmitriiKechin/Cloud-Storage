@@ -6,7 +6,6 @@ import useAuth from './hooks/auth.hook';
 import { Loader } from './elements/loader';
 import { PageCenter } from './elements/PageCenter';
 import { Message } from './elements/Message';
-import MessageProvider from './providers/MessegeProvider';
 import RequestProvider from './providers/RequestProvider';
 import APIProvider from './providers/ApiProvider';
 
@@ -42,24 +41,22 @@ const App: React.FC<{ storagePage: JSX.Element; authPage: JSX.Element }> = ({
 
   return (
     <AppWraper>
-      <MessageProvider>
-        <RequestProvider>
-          <APIProvider>
-            {!auth.loading ? (
-              <Routes>
-                <Route path="/storage" element={storagePage} />
-                <Route path="/login" element={authPage} />
-              </Routes>
-            ) : (
-              <PageCenter>
-                <Loader />
-              </PageCenter>
-            )}
-          </APIProvider>
-        </RequestProvider>
+      <RequestProvider>
+        <APIProvider>
+          {!auth.loading ? (
+            <Routes>
+              <Route path="/storage" element={storagePage} />
+              <Route path="/login" element={authPage} />
+            </Routes>
+          ) : (
+            <PageCenter>
+              <Loader />
+            </PageCenter>
+          )}
+        </APIProvider>
+      </RequestProvider>
 
-        <Message />
-      </MessageProvider>
+      <Message />
     </AppWraper>
   );
 };

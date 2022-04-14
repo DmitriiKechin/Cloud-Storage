@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import useMessage from '../hooks/message.hook';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const MessageStyled = styled.div<{ isText: boolean }>`
   position: absolute;
@@ -43,7 +43,8 @@ const MessageStyled = styled.div<{ isText: boolean }>`
 `;
 
 export const Message: React.FC = () => {
-  const { message } = useMessage();
+  const { message } = useTypedSelector((state) => state.message);
   const isText = !!message;
+
   return <MessageStyled isText={isText}>{message}</MessageStyled>;
 };

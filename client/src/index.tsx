@@ -10,6 +10,8 @@ import AuthProvider from './providers/AuthProvider';
 import { AuthPage } from './pages/AuthPage';
 import { StoragePage } from './pages/StoragePage';
 import adaptiveSize from './global_Function/adaptiveSize';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 const Global = createGlobalStyle`
 html{
@@ -54,11 +56,13 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <Global />
-      <AuthProvider>
-        <BrowserRouter>
-          <App storagePage={<StoragePage />} authPage={<AuthPage />} />
-        </BrowserRouter>
-      </AuthProvider>
+      <Provider store={store}>
+        <AuthProvider>
+          <BrowserRouter>
+            <App storagePage={<StoragePage />} authPage={<AuthPage />} />
+          </BrowserRouter>
+        </AuthProvider>
+      </Provider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')

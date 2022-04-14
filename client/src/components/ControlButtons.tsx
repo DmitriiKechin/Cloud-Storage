@@ -7,8 +7,8 @@ import { SvgEdit } from '../elements/svg/svgEdit';
 import { SvgOpenFolder } from '../elements/svg/svgOpenFolder';
 import { SvgShare } from '../elements/svg/svgShare';
 import useApi from '../hooks/api.hook';
-import useMessage from '../hooks/message.hook';
 import useStoragePage from '../hooks/storagePage.hook';
+import { useAction } from '../hooks/useAction';
 import { Prompt } from './Prompt';
 
 type parentType = 'table' | 'icons';
@@ -78,7 +78,7 @@ const FilesButtons = styled(Button)<{ parentType: parentType }>`
 `;
 
 const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
-  const { setMessage } = useMessage();
+  const { setMessage } = useAction();
   const [renamePromptVisible, setRenamePromptVisible] =
     useState<boolean>(false);
   const {
