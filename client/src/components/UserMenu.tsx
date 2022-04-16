@@ -7,13 +7,11 @@ import { Button } from '../elements/Button';
 import { FileLoad } from '../elements/FileLoad';
 import { SvgAddImage } from '../elements/svg/svgAddImage';
 import { SvgExit } from '../elements/svg/svgExit';
-import useAuth from '../hooks/auth.hook';
 import useRequest from '../hooks/request.hook';
 import useApi from '../hooks/api.hook';
-
-// const Wrapper = styled.div<{ visible: boolean }>`
-//   display: ${(props) => (props.visible ? 'block' : 'none')};
-// `;
+import { useAction } from '../hooks/useAction';
+import { setSettingUser } from '../actions/settingUser';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const UserMenuStyled = styled.div`
   width: 20rem;
@@ -56,13 +54,14 @@ export const UserMenu: React.FC<IUserMenu> = ({
   countFolders,
   closeHandler,
 }) => {
-  const auth = useAuth();
+  const { logout } = useAction();
+  const { user } = useTypedSelector((state) => state.auth);
   const api = useApi();
   const { loading, isSuccess } = useRequest();
 
-  const logout = (): void => {
-    auth.setSettingUser({ currentFolder: auth?.user?._id || '' });
-    auth.logout();
+  const logoutHandler = (): void => {
+    setSettingUser({ currentFolder: user?._id || '' });
+    logout();
   };
 
   const uploadAvatar = async (
@@ -80,7 +79,6 @@ export const UserMenu: React.FC<IUserMenu> = ({
   };
 
   return (
-    // <Wrapper visible={visible}>
     <PageCenter>
       <UserMenuStyled>
         <Flex parentHeight direction="column" align="center">
@@ -111,7 +109,12 @@ export const UserMenu: React.FC<IUserMenu> = ({
                 >
                   <SvgAddImage />
                 </FileLoad>
-                <Button click={logout} width="2rem" padding="0.3rem" dark>
+                <Button
+                  click={logoutHandler}
+                  width="2rem"
+                  padding="0.3rem"
+                  dark
+                >
                   <SvgExit />
                 </Button>
               </Flex>

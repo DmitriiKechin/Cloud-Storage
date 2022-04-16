@@ -72,35 +72,29 @@ router.post(
   ],
   async (req: express.Request, res: express.Response) => {
     const response: ILoginResponse = { message: '' };
-
+    res.status(500).json((response.message = 'Server error'));
+    console.log('login');
     try {
-      const errors: object = validationResult(req);
-
-      if (Object.keys(errors).length === 0) {
-        return res.status(400).json({ message: 'Uncorrect request' });
-      }
-      const { email, password }: IData = req.body;
-
-      const user: IUser | null = await User.findOne({ email });
-
-      if (!user) {
-        return res.status(400).json({ message: `Invalid username / password` });
-      }
-
-      const isMatch: boolean = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(400).json({ message: `Invalid username / password` });
-      }
-
-      const token = jwt.sign({ id: user.id }, secretPhrase, {
-        expiresIn: '1h',
-      });
-
-      response.token = token;
-      response.user = user;
-      response.message = 'success';
-
-      res.json(response);
+      // const errors: object = validationResult(req);
+      // if (Object.keys(errors).length === 0) {
+      //   return res.status(400).json({ message: 'Uncorrect request' });
+      // }
+      // const { email, password }: IData = req.body;
+      // const user: IUser | null = await User.findOne({ email });
+      // if (!user) {
+      //   return res.status(400).json({ message: `Invalid username / password` });
+      // }
+      // const isMatch: boolean = await bcrypt.compare(password, user.password);
+      // if (!isMatch) {
+      //   return res.status(400).json({ message: `Invalid username / password` });
+      // }
+      // const token = jwt.sign({ id: user.id }, secretPhrase, {
+      //   expiresIn: '1h',
+      // });
+      // response.token = token;
+      // response.user = user;
+      // response.message = 'success';
+      // res.json(response);
     } catch (e) {
       console.log(e);
       res.status(500).json((response.message = 'Server error'));

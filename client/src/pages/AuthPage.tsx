@@ -8,8 +8,8 @@ import { PageCenter } from '../elements/PageCenter';
 import useApi from '../hooks/api.hook';
 import logo from '../img/logo.svg';
 import { IDataLogin } from '../Types/types';
-import useAuth from '../hooks/auth.hook';
 import useRequest from '../hooks/request.hook';
+import { useAction } from '../hooks/useAction';
 
 const StyledAuthPage = styled.form`
   width: 22rem;
@@ -23,7 +23,8 @@ const StyledAuthPage = styled.form`
 
 export const AuthPage: React.FC = () => {
   const api = useApi();
-  const auth = useAuth();
+  const { login } = useAction();
+  // const auth = useAuth();
   const { loading, isSuccess } = useRequest();
 
   const [formDate, setFormDate] = useState<{ email: string; password: string }>(
@@ -63,11 +64,9 @@ export const AuthPage: React.FC = () => {
 
     const data: IDataLogin = await api!.auth.login({ ...formDate });
     setTimeout(() => {
-      data && auth.login(data.token, data.user, auth.isAuthorization);
+      data && login({ token: data.token, user: data.user });
     }, 1500);
   };
-
-  // console.log('Auth page render');
 
   return (
     <PageCenter>

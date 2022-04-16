@@ -1,13 +1,13 @@
 import React, { useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-
-import useAuth from './hooks/auth.hook';
 import { Loader } from './elements/loader';
 import { PageCenter } from './elements/PageCenter';
 import { Message } from './elements/Message';
 import RequestProvider from './providers/RequestProvider';
 import APIProvider from './providers/ApiProvider';
+import { useTypedSelector } from './hooks/useTypedSelector';
+import { useAction } from './hooks/useAction';
 
 const AppWraper = styled.div`
   width: 100%;
@@ -25,25 +25,29 @@ const App: React.FC<{ storagePage: JSX.Element; authPage: JSX.Element }> = ({
   authPage,
 }) => {
   const navigate = useNavigate();
-  const auth = useAuth();
+  // const auth = useAuth();
+  const { loading, isAuthorization } = useTypedSelector((state) => state.auth);
+  const { startAuth } = useAction();
 
   useLayoutEffect(() => {
-    if (!auth.loading) {
-      if (auth.isAuthorization) {
+    startAuth();
+    console.log('good');
+    if (!loading) {
+      if (isAuthorization) {
         navigate('/storage');
       } else {
         navigate('/login');
       }
     }
-  }, [auth.loading, auth.isAuthorization, navigate]);
+  }, [isAuthorization, navigate, loading]);
 
-  // console.log('App render');
+  console.log('App render');
 
   return (
     <AppWraper>
       <RequestProvider>
         <APIProvider>
-          {!auth.loading ? (
+          {!loading ? (
             <Routes>
               <Route path="/storage" element={storagePage} />
               <Route path="/login" element={authPage} />

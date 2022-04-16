@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { setSettingUser } from '../actions/settingUser';
 import { Button } from '../elements/Button';
 import { FileLoad } from '../elements/FileLoad';
 import { SvgAdd } from '../elements/svg/svgAdd';
@@ -9,7 +10,6 @@ import { SvgList } from '../elements/svg/svgList';
 import { SvgUp } from '../elements/svg/svgUp';
 import adaptiveSize from '../global_Function/adaptiveSize';
 import useApi from '../hooks/api.hook';
-import useAuth from '../hooks/auth.hook';
 import useStoragePage from '../hooks/storagePage.hook';
 import { Prompt } from './Prompt';
 import { Sort } from './Sort';
@@ -81,7 +81,6 @@ interface IToolbar {}
 export const Toolbar: React.FC<IToolbar> = () => {
   const [createFolderPromptVisible, setCreateFolderPromptVisible] =
     useState<boolean>(false);
-  const { setSettingUser } = useAuth();
 
   const api = useApi();
   const {

@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
+import { setSettingUser } from '../actions/settingUser';
 import { API_URL } from '../config';
 import { APIContext } from '../contex/ApiContext';
-import useAuth from '../hooks/auth.hook';
 import useRequest from '../hooks/request.hook';
 import { useAction } from '../hooks/useAction';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import { IDataLogin, IFile, ObjectString, typeSort } from '../Types/types';
 
 type IMethod =
@@ -18,7 +19,9 @@ type IMethod =
   | 'PATH';
 
 const APIProvider: React.FC = ({ children }) => {
-  const { token, isAuthorization, auth, logout, setSettingUser } = useAuth();
+  // const { token, isAuthorization, auth, logout, setSettingUser } = useAuth();
+  const { token } = useTypedSelector((state) => state.auth);
+  const { auth, logout } = useAction();
   const { setMessage } = useAction();
   const { setLoading, setIsSuccess } = useRequest();
 
@@ -51,7 +54,7 @@ const APIProvider: React.FC = ({ children }) => {
 
         console.log('data: ', data);
 
-        token && auth(token, isAuthorization);
+        token && auth(token);
 
         if (!response.ok) {
           throw new Error(data.message || 'Что-то пошло не так');
@@ -70,7 +73,7 @@ const APIProvider: React.FC = ({ children }) => {
         setLoading(false);
       }
     },
-    [auth, isAuthorization, setIsSuccess, setLoading, setMessage, token]
+    [auth, setIsSuccess, setLoading, setMessage, token]
   );
 
   const registration = useCallback(
@@ -100,7 +103,7 @@ const APIProvider: React.FC = ({ children }) => {
       setSettingUser({ currentFolder: currentDir });
       return response.files;
     },
-    [logout, request, setSettingUser]
+    [logout, request]
   );
 
   const upLoadAvatar = useCallback(
@@ -141,12 +144,12 @@ const APIProvider: React.FC = ({ children }) => {
       xhr.setRequestHeader('authorization', token || '');
       xhr.send(data);
 
-      token && auth(token, isAuthorization);
+      token && auth(token);
 
       const cancel = xhr.abort.bind(xhr);
       return cancel;
     },
-    [auth, isAuthorization, setMessage, token]
+    [auth, setMessage, token]
   );
 
   const downloadFile = useCallback(

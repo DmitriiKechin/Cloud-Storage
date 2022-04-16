@@ -1,7 +1,7 @@
 import { API_URL } from '../config';
 import formattedSize from '../global_Function/formattedSize';
 import { IUser } from '../Types/types';
-import useAuth from './auth.hook';
+import { useTypedSelector } from './useTypedSelector';
 
 interface IUserInfo {
   id: string;
@@ -15,8 +15,8 @@ interface IUserInfo {
 }
 
 export const useUserInfo = (): IUserInfo => {
-  const auth = useAuth();
-
+  // const auth = useAuth();
+  const { user: userState } = useTypedSelector((state) => state.auth);
   const userDefault: IUser = {
     diskSpace: 0,
     email: '',
@@ -27,7 +27,7 @@ export const useUserInfo = (): IUserInfo => {
     usedSpace: 0,
   };
 
-  const user: IUser = auth.user || userDefault;
+  const user: IUser = userState || userDefault;
   const userInfo: IUserInfo = {
     id: user._id,
     avatarSrc: user.avatar || API_URL + '/UserDefault.svg',
