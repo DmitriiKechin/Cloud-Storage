@@ -49,12 +49,10 @@ export const FilesTable: React.FC<IFilesTable> = ({ update }) => {
 
   useEffect(() => {
     (async () => {
-      console.log('Storage getFiles');
-      console.log('currentFolder: ', currentFolder);
+      console.log('filesTable');
       if (currentFolder) {
         const files = await api.file.getFiles(currentFolder, typeSort);
         setStorageFiles(files || []);
-        console.log('Storage getFiles запрос');
       }
     })();
   }, [currentFolder, typeSort]);
