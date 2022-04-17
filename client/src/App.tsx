@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Loader } from './elements/loader';
@@ -26,9 +26,8 @@ const App: React.FC<{ storagePage: JSX.Element; authPage: JSX.Element }> = ({
   const { loading, isAuthorization } = useTypedSelector((state) => state.auth);
   const { startAuth } = useAction();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     startAuth();
-    console.log('good');
     if (!loading) {
       if (isAuthorization) {
         navigate('/storage');
