@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { Files } from '../components/Files';
@@ -36,14 +36,13 @@ export const StoragePage: React.FC = () => {
     setUserMenuViseble(!userMenuVisible);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let settingDefault: ISettingUser | null = null;
     const usersSettings = localStorage.getItem('usersSettings');
 
     if (usersSettings) {
       settingDefault = JSON.parse(usersSettings)[userInfo.id];
     }
-
     setCurrentFolder(settingDefault?.currentFolder || userInfo.id);
     setIsTable(settingDefault?.isTable || false);
     setParentFolder([userInfo.id]);

@@ -11,7 +11,7 @@ import { storageName } from '../Types/auth';
 import { IDataLogin, IFile, ObjectString, typeSort } from '../Types/types';
 import { IApi, IMethod } from '../Types/api';
 
-const token = JSON.parse(localStorage.getItem(storageName) || 'null').token;
+const token = JSON.parse(localStorage.getItem(storageName) || 'null')?.token;
 
 const request = async (
   url: string,

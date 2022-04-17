@@ -76,7 +76,7 @@ export const UploadManager: React.FC<IUploadManager> = () => {
     } else {
       setIsVisible(true);
     }
-  }, [setUploadedFiles, uploadedFiles.length]); //иначе много перевызовов
+  }, [uploadedFiles]); //иначе много перевызовов
 
   const getFiles = useMemo(() => {
     return uploadedFiles.map((file) => {

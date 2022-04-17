@@ -51,7 +51,7 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
   const deleteUploadedFile = useCallback(() => {
     setTimeout(() => {
       setUploadedFiles(
-        (function () {
+        (() => {
           let files = [...uploadedFiles];
           const index = files.findIndex((uploadedFile) => {
             return (
@@ -69,6 +69,7 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
   }, [file.lastModified, file.name, file.size, setUploadedFiles]);
 
   useEffect(() => {
+    console.log('FileLoader1');
     const formData = new FormData();
     console.log('file', file);
     formData.append('file', file);
@@ -83,6 +84,7 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
   }, []);
 
   useEffect(() => {
+    console.log('FileLoaderAny');
     if (titleRef.current) {
       const titleWidth = titleRef.current.clientWidth;
       const rem = Number.parseFloat(getComputedStyle(document.body).fontSize);
