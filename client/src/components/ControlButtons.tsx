@@ -7,9 +7,9 @@ import { SvgEdit } from '../elements/svg/svgEdit';
 import { SvgOpenFolder } from '../elements/svg/svgOpenFolder';
 import { SvgShare } from '../elements/svg/svgShare';
 import api from '../actions/api';
-import useStoragePage from '../hooks/storagePage.hook';
 import { useAction } from '../hooks/useAction';
 import { Prompt } from './Prompt';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 type parentType = 'table' | 'icons';
 
@@ -71,17 +71,15 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
   const [renamePromptVisible, setRenamePromptVisible] =
     useState<boolean>(false);
   const {
-    targetType,
-    target,
-    targetName,
-    currentFolder,
-    openFolderHandler,
+    setCurrentFolder,
     setParentFolder,
     setTargetCountFiles,
     setTargetDate,
     setTargetName,
     setTargetSize,
-  } = useStoragePage();
+  } = useAction();
+  const { targetType, target, targetName, currentFolder, parentFolder } =
+    useTypedSelector((state) => state.storagePage);
 
   const renameHandler = (): void => {
     setRenamePromptVisible(!renamePromptVisible);
@@ -90,8 +88,8 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
   const renameFile = async (newName: string): Promise<void> => {
     const name = newName.trim();
     await api.file.renameFile(name, target.id);
-    openFolderHandler('');
-    openFolderHandler(currentFolder);
+    setCurrentFolder('');
+    setCurrentFolder(currentFolder);
   };
 
   return (
@@ -111,8 +109,8 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
           parentType={parentType}
           dark
           click={() => {
-            openFolderHandler(target.id);
-            setParentFolder((prev) => [...prev, target.parent]);
+            setCurrentFolder(target.id);
+            setParentFolder([...parentFolder, target.parent]);
             setTargetCountFiles(' шт.');
             setTargetDate('');
             setTargetName('');
@@ -144,8 +142,8 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
         dark
         click={async () => {
           await api.file.deleteFile(target.id);
-          openFolderHandler('');
-          openFolderHandler(currentFolder);
+          setCurrentFolder('');
+          setCurrentFolder(currentFolder);
         }}
       >
         <SvgDelete />

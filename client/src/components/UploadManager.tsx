@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import styled, { css } from 'styled-components';
-import useStoragePage from '../hooks/storagePage.hook';
+import { useAction } from '../hooks/useAction';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import FileLoader from './FileLoader';
 
 const Wrapper = styled.div<{ visible: boolean }>`
@@ -59,16 +60,18 @@ const Wrapper = styled.div<{ visible: boolean }>`
 interface IUploadManager {}
 
 export const UploadManager: React.FC<IUploadManager> = () => {
-  const { uploadedFiles, setUploadedFiles, openFolderHandler, currentFolder } =
-    useStoragePage();
+  const { setUploadedFiles, setCurrentFolder } = useAction();
+  const { uploadedFiles, currentFolder } = useTypedSelector(
+    (state) => state.storagePage
+  );
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (uploadedFiles.length === 0) {
       setIsVisible(false);
-      openFolderHandler('');
+      setCurrentFolder('');
       setTimeout(() => {
-        openFolderHandler(currentFolder);
+        setCurrentFolder(currentFolder);
       }, 0);
     } else {
       setIsVisible(true);

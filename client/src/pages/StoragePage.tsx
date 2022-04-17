@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { Files } from '../components/Files';
@@ -6,8 +6,9 @@ import Frame from '../components/Frame';
 import { Header } from '../components/Header';
 import { Toolbar } from '../components/Toolbar';
 import { UserMenu } from '../components/UserMenu';
+import { useAction } from '../hooks/useAction';
 import { useUserInfo } from '../hooks/userInfo.hook';
-import StoragePageProvider from '../providers/StoragePageProvader';
+import { ISettingUser } from '../Types/types';
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,36 +22,63 @@ const Wrapper = styled.div`
 export const StoragePage: React.FC = () => {
   const [userMenuVisible, setUserMenuViseble] = useState<boolean>(false);
   const userInfo = useUserInfo();
+  const {
+    setIsTable,
+    setParentFolder,
+    setCurrentFolder,
+    setTarget,
+    setTargetCountFiles,
+    setTypeSort,
+    setTargetSize,
+  } = useAction();
 
   const userMenuHandler = (): void => {
     setUserMenuViseble(!userMenuVisible);
   };
 
+  useLayoutEffect(() => {
+    let settingDefault: ISettingUser | null = null;
+    const usersSettings = localStorage.getItem('usersSettings');
+
+    if (usersSettings) {
+      settingDefault = JSON.parse(usersSettings)[userInfo.id];
+    }
+
+    setCurrentFolder(settingDefault?.currentFolder || userInfo.id);
+    setIsTable(settingDefault?.isTable || false);
+    setParentFolder([userInfo.id]);
+    setTarget({
+      id: userInfo.id,
+      parent: userInfo.id,
+    });
+    setTargetCountFiles(userInfo.countFiles + ' шт.');
+    setTypeSort(settingDefault?.typeSort || 'Name');
+    setTargetSize(userInfo.usedSpace);
+  }, []);
+
   return (
-    <StoragePageProvider>
-      <Wrapper>
-        <Header
-          userMenuHandler={userMenuHandler}
-          title="Dimitrius Storage"
-          userName={userInfo.userName}
+    <Wrapper>
+      <Header
+        userMenuHandler={userMenuHandler}
+        title="Dimitrius Storage"
+        userName={userInfo.userName}
+        avatarSrc={userInfo.avatarSrc}
+      ></Header>
+      {userMenuVisible && (
+        <UserMenu
+          closeHandler={userMenuHandler}
           avatarSrc={userInfo.avatarSrc}
-        ></Header>
-        {userMenuVisible && (
-          <UserMenu
-            closeHandler={userMenuHandler}
-            avatarSrc={userInfo.avatarSrc}
-            countFiles={userInfo.countFiles}
-            countFolders={userInfo.countFolders}
-            diskSpace={userInfo.diskSpace}
-            freeSpace={userInfo.freeSpace}
-            usedSpace={userInfo.usedSpace}
-            userName={userInfo.userName}
-          />
-        )}
-        <Toolbar />
-        <Files />
-        <Frame />
-      </Wrapper>
-    </StoragePageProvider>
+          countFiles={userInfo.countFiles}
+          countFolders={userInfo.countFolders}
+          diskSpace={userInfo.diskSpace}
+          freeSpace={userInfo.freeSpace}
+          usedSpace={userInfo.usedSpace}
+          userName={userInfo.userName}
+        />
+      )}
+      <Toolbar />
+      <Files />
+      <Frame />
+    </Wrapper>
   );
 };

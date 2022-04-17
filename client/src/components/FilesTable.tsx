@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import api from '../actions/api';
-import useStoragePage from '../hooks/storagePage.hook';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import { IFile } from '../Types/types';
 import { FileRow } from './FileRow';
 
@@ -34,7 +34,9 @@ interface IFilesTable {
 
 export const FilesTable: React.FC<IFilesTable> = ({ update }) => {
   const [storageFiles, setStorageFiles] = useState<IFile[]>([]);
-  const { currentFolder, typeSort } = useStoragePage();
+  const { currentFolder, typeSort } = useTypedSelector(
+    (state) => state.storagePage
+  );
 
   const arrayFiles = useCallback(
     (files: IFile[]) => {

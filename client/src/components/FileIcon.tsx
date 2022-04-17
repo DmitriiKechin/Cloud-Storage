@@ -4,7 +4,8 @@ import formattedDate from '../global_Function/formattedDate';
 import formattedSize from '../global_Function/formattedSize';
 import getIcon from '../global_Function/getIcon';
 import nameShort from '../global_Function/nameShort';
-import useStoragePage from '../hooks/storagePage.hook';
+import { useAction } from '../hooks/useAction';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import { IFile } from '../Types/types';
 
 const Wrapper = styled.div<{ margin?: string }>`
@@ -38,7 +39,6 @@ const Name = styled.div`
   flex: 0 1 50%;
   width: 100%;
   text-align: center;
-  /* padding-bottom: 5px; */
   overflow: hidden;
 `;
 
@@ -57,7 +57,7 @@ export const FileIcon: React.FC<IFileIcon> = ({
   size,
 }) => {
   const {
-    openFolderHandler,
+    setCurrentFolder,
     setParentFolder,
     setTarget,
     setTargetCountFiles,
@@ -65,7 +65,9 @@ export const FileIcon: React.FC<IFileIcon> = ({
     setTargetSize,
     setTargetType,
     setTargetName,
-  } = useStoragePage();
+  } = useAction();
+
+  const { parentFolder } = useTypedSelector((state) => state.storagePage);
 
   const shortName = nameShort(name);
   const icon = getIcon(type);
@@ -76,8 +78,8 @@ export const FileIcon: React.FC<IFileIcon> = ({
       margin={margin}
       onDoubleClick={() => {
         if (type === 'dir') {
-          openFolderHandler(_id);
-          setParentFolder((prev) => [...prev, parent]);
+          setCurrentFolder(_id);
+          setParentFolder([...parentFolder, parent]);
         }
       }}
       onFocus={() => {

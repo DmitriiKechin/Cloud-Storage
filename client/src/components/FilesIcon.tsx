@@ -8,11 +8,11 @@ import React, {
 import styled from 'styled-components';
 import { Flex } from '../elements/Flex';
 import api from '../actions/api';
-import useStoragePage from '../hooks/storagePage.hook';
 import { IFile } from '../Types/types';
 import ControlButtons from './ControlButtons';
 import { FileIcon } from './FileIcon';
 import { PropertyAndValue } from './PropertyAndValue';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const Wrapper = styled.div`
   flex: 1 1;
@@ -86,7 +86,7 @@ const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
     targetSize,
     targetCountFiles,
     typeSort,
-  } = useStoragePage();
+  } = useTypedSelector((state) => state.storagePage);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [marginIconFile, setMarginIconFile] = useState<string>('');

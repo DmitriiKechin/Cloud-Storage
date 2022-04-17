@@ -10,9 +10,10 @@ import { SvgList } from '../elements/svg/svgList';
 import { SvgUp } from '../elements/svg/svgUp';
 import adaptiveSize from '../global_Function/adaptiveSize';
 import api from '../actions/api';
-import useStoragePage from '../hooks/storagePage.hook';
 import { Prompt } from './Prompt';
 import { Sort } from './Sort';
+import { useAction } from '../hooks/useAction';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const StyledToolbar = styled.div`
   flex: 0 0 2.9rem;
@@ -82,16 +83,10 @@ export const Toolbar: React.FC<IToolbar> = () => {
   const [createFolderPromptVisible, setCreateFolderPromptVisible] =
     useState<boolean>(false);
 
-  const {
-    openFolderHandler,
-    parentFolder,
-    currentFolder,
-    setParentFolder,
-    isTable,
-    setIsTable,
-    setUploadedFiles,
-    uploadedFiles,
-  } = useStoragePage();
+  const { setCurrentFolder, setParentFolder, setIsTable, setUploadedFiles } =
+    useAction();
+  const { parentFolder, currentFolder, isTable, uploadedFiles } =
+    useTypedSelector((state) => state.storagePage);
 
   const createFolderHandler = (): void => {
     setCreateFolderPromptVisible(!createFolderPromptVisible);
@@ -122,8 +117,8 @@ export const Toolbar: React.FC<IToolbar> = () => {
       parent: currentFolder,
     });
 
-    openFolderHandler('');
-    openFolderHandler(currentFolder);
+    setCurrentFolder('');
+    setCurrentFolder(currentFolder);
   };
 
   return (
@@ -135,7 +130,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
             width="3rem"
             padding="0.1rem"
             click={() => {
-              openFolderHandler(parentFolder[parentFolder.length - 1]);
+              setCurrentFolder(parentFolder[parentFolder.length - 1]);
               if (parentFolder.length > 1) {
                 const newParentFolder = [
                   ...parentFolder.splice(0, parentFolder.length - 1),
@@ -173,7 +168,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
             padding="0.1rem"
             click={() => {
               setSettingUser({ isTable: !isTable });
-              setIsTable((prev) => !prev);
+              setIsTable(!isTable);
             }}
           >
             {isTable ? <SvgIcons /> : <SvgList />}

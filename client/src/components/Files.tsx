@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import useStoragePage from '../hooks/storagePage.hook';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import FilesIcons from './FilesIcon';
 import { FilesTable } from './FilesTable';
 import { UploadManager } from './UploadManager';
 
 export const Files: React.FC = () => {
   const [update, setUpdate] = useState<boolean>(false);
-  const { isTable } = useStoragePage();
+  const { isTable } = useTypedSelector((state) => state.storagePage);
 
   window.addEventListener('resize', () => {
     if (update) {
       return;
     }
-
     setUpdate(true);
 
     setTimeout(() => {

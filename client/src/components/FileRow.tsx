@@ -5,7 +5,8 @@ import formattedDate from '../global_Function/formattedDate';
 import formattedSize from '../global_Function/formattedSize';
 import getIcon from '../global_Function/getIcon';
 import nameShort from '../global_Function/nameShort';
-import useStoragePage from '../hooks/storagePage.hook';
+import { useAction } from '../hooks/useAction';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import { IFile } from '../Types/types';
 import ControlButtons from './ControlButtons';
 
@@ -31,21 +32,12 @@ const Wrapper = styled.div`
     box-shadow: inset 0 0 0.5rem rgba(255, 255, 255, 0.7);
     background-color: rgba(0, 0, 0, 0.1);
   }
-
-  /* &:focus {
-    background-color: ${(props) => props.theme.colors.darkPrimary}99;
-    box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.9);
-    outline: none;
-  } */
 `;
 
 const Name = styled.div`
   color: ${(props) => props.theme.colors.lightPrimary};
   font-size: 0.8rem;
   width: 50%;
-  /* flex: 0 1 50%; */
-  /* width: 100%;
-  text-align: center; */
   overflow: hidden;
   @media (max-width: 355px) {
     width: 72%;
@@ -150,8 +142,9 @@ export const FileRow: React.FC<IFileRow> = ({
 }) => {
   const nameRef = useRef<HTMLDivElement>(null);
   const shortNameRef = useRef<string>();
-  const { openFolderHandler, setParentFolder, setTarget, setTargetType } =
-    useStoragePage();
+  const { setCurrentFolder, setParentFolder, setTarget, setTargetType } =
+    useAction();
+  const { parentFolder } = useTypedSelector((state) => state.storagePage);
   const [isActive, setIsActive] = useState<boolean>(false);
 
   const click = (): void => {
@@ -194,8 +187,8 @@ export const FileRow: React.FC<IFileRow> = ({
       }}
       onDoubleClick={() => {
         if (type === 'dir') {
-          openFolderHandler(_id);
-          setParentFolder((prev) => [...prev, parent]);
+          setCurrentFolder(_id);
+          setParentFolder([...parentFolder, parent]);
         }
       }}
     >

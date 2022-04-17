@@ -4,7 +4,8 @@ import { setSettingUser } from '../actions/settingUser';
 import { Flex } from '../elements/Flex';
 import { SvgSort } from '../elements/svg/svgSort';
 import { SvgTriangleDown } from '../elements/svg/svgTriangleDown';
-import useStoragePage from '../hooks/storagePage.hook';
+import { useAction } from '../hooks/useAction';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 import { typeSort } from '../Types/types';
 
 interface ISort {
@@ -132,7 +133,8 @@ const MenuItem = styled.div<{ isActive?: boolean; number: number }>`
 `;
 
 export const Sort: React.FC<ISort> = () => {
-  const { typeSort, setTypeSort } = useStoragePage();
+  const { setTypeSort } = useAction();
+  const { typeSort } = useTypedSelector((state) => state.storagePage);
   const [isClicked, setIsClicked] = useState(false);
 
   const TypeSortVisible = () => {

@@ -5,9 +5,10 @@ import { Flex } from '../elements/Flex';
 import { SvgClose } from '../elements/svg/svgClose';
 import nameShort from '../global_Function/nameShort';
 import api from '../actions/api';
-import useStoragePage from '../hooks/storagePage.hook';
 import { ILoadedFile } from '../Types/types';
 import { Progressbar } from './Progressbar';
+import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useAction } from '../hooks/useAction';
 
 const Wrapper = styled.div<{ visible: boolean }>`
   width: 100%;
@@ -42,23 +43,28 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
   const [progress, setProgress] = useState<number>(0);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const clear = useRef<() => void>();
-  const { currentFolder, setUploadedFiles } = useStoragePage();
+  const { setUploadedFiles } = useAction();
+  const { uploadedFiles, currentFolder } = useTypedSelector(
+    (state) => state.storagePage
+  );
 
   const deleteUploadedFile = useCallback(() => {
     setTimeout(() => {
-      setUploadedFiles((prev) => {
-        let files = [...prev];
-        const index = files.findIndex((uploadedFile) => {
-          return (
-            uploadedFile.name === file.name &&
-            uploadedFile.size === file.size &&
-            uploadedFile.lastModified === file.lastModified
-          );
-        });
+      setUploadedFiles(
+        (function () {
+          let files = [...uploadedFiles];
+          const index = files.findIndex((uploadedFile) => {
+            return (
+              uploadedFile.name === file.name &&
+              uploadedFile.size === file.size &&
+              uploadedFile.lastModified === file.lastModified
+            );
+          });
 
-        files.splice(index, 1);
-        return files;
-      });
+          files.splice(index, 1);
+          return files;
+        })()
+      );
     }, 300);
   }, [file.lastModified, file.name, file.size, setUploadedFiles]);
 
