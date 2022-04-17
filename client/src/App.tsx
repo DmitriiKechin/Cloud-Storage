@@ -4,8 +4,6 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Loader } from './elements/loader';
 import { PageCenter } from './elements/PageCenter';
 import { Message } from './elements/Message';
-import RequestProvider from './providers/RequestProvider';
-import APIProvider from './providers/ApiProvider';
 import { useTypedSelector } from './hooks/useTypedSelector';
 import { useAction } from './hooks/useAction';
 
@@ -25,7 +23,6 @@ const App: React.FC<{ storagePage: JSX.Element; authPage: JSX.Element }> = ({
   authPage,
 }) => {
   const navigate = useNavigate();
-  // const auth = useAuth();
   const { loading, isAuthorization } = useTypedSelector((state) => state.auth);
   const { startAuth } = useAction();
 
@@ -45,21 +42,16 @@ const App: React.FC<{ storagePage: JSX.Element; authPage: JSX.Element }> = ({
 
   return (
     <AppWraper>
-      <RequestProvider>
-        <APIProvider>
-          {!loading ? (
-            <Routes>
-              <Route path="/storage" element={storagePage} />
-              <Route path="/login" element={authPage} />
-            </Routes>
-          ) : (
-            <PageCenter>
-              <Loader />
-            </PageCenter>
-          )}
-        </APIProvider>
-      </RequestProvider>
-
+      {!loading ? (
+        <Routes>
+          <Route path="/storage" element={storagePage} />
+          <Route path="/login" element={authPage} />
+        </Routes>
+      ) : (
+        <PageCenter>
+          <Loader />
+        </PageCenter>
+      )}
       <Message />
     </AppWraper>
   );

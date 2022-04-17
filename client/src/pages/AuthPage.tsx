@@ -5,11 +5,11 @@ import { Button } from '../elements/Button';
 import { Flex } from '../elements/Flex';
 import { Input } from '../elements/Input';
 import { PageCenter } from '../elements/PageCenter';
-import useApi from '../hooks/api.hook';
+import api from '../actions/api';
 import logo from '../img/logo.svg';
 import { IDataLogin } from '../Types/types';
-import useRequest from '../hooks/request.hook';
 import { useAction } from '../hooks/useAction';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const StyledAuthPage = styled.form`
   width: 22rem;
@@ -22,10 +22,9 @@ const StyledAuthPage = styled.form`
 `;
 
 export const AuthPage: React.FC = () => {
-  const api = useApi();
   const { login } = useAction();
-  // const auth = useAuth();
-  const { loading, isSuccess } = useRequest();
+  const { loadingRequest: loading, isSuccessRequest: isSuccess } =
+    useTypedSelector((state) => state.request);
 
   const [formDate, setFormDate] = useState<{ email: string; password: string }>(
     {
@@ -43,7 +42,7 @@ export const AuthPage: React.FC = () => {
   // ) => {
   //   event.preventDefault();
 
-  //   const data: IDataLogin = await api!.auth.registration({
+  //   const data: IDataLogin = await api.auth.registration({
   //     ...formDate,
   //   });
   //   setTimeout(() => {
@@ -62,7 +61,7 @@ export const AuthPage: React.FC = () => {
   const loginHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    const data: IDataLogin = await api!.auth.login({ ...formDate });
+    const data: IDataLogin = await api.auth.login({ ...formDate });
     setTimeout(() => {
       data && login({ token: data.token, user: data.user });
     }, 1500);

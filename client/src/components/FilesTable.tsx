@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import useApi from '../hooks/api.hook';
+import api from '../actions/api';
 import useStoragePage from '../hooks/storagePage.hook';
 import { IFile } from '../Types/types';
 import { FileRow } from './FileRow';
@@ -35,7 +35,6 @@ interface IFilesTable {
 export const FilesTable: React.FC<IFilesTable> = ({ update }) => {
   const [storageFiles, setStorageFiles] = useState<IFile[]>([]);
   const { currentFolder, typeSort } = useStoragePage();
-  const api = useApi();
 
   const arrayFiles = useCallback(
     (files: IFile[]) => {
@@ -51,7 +50,7 @@ export const FilesTable: React.FC<IFilesTable> = ({ update }) => {
       console.log('Storage getFiles');
       console.log('currentFolder: ', currentFolder);
       if (currentFolder) {
-        const files = await api!.file.getFiles(currentFolder, typeSort);
+        const files = await api.file.getFiles(currentFolder, typeSort);
         setStorageFiles(files || []);
         console.log('Storage getFiles запрос');
       }

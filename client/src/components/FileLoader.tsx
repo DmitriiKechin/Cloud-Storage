@@ -4,7 +4,7 @@ import { Button } from '../elements/Button';
 import { Flex } from '../elements/Flex';
 import { SvgClose } from '../elements/svg/svgClose';
 import nameShort from '../global_Function/nameShort';
-import useApi from '../hooks/api.hook';
+import api from '../actions/api';
 import useStoragePage from '../hooks/storagePage.hook';
 import { ILoadedFile } from '../Types/types';
 import { Progressbar } from './Progressbar';
@@ -41,7 +41,6 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
   const shortNameRef = useRef<string>();
   const [progress, setProgress] = useState<number>(0);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const api = useApi();
   const clear = useRef<() => void>();
   const { currentFolder, setUploadedFiles } = useStoragePage();
 
@@ -69,7 +68,7 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
     formData.append('file', file);
     formData.append('parent', currentFolder);
 
-    clear.current = api!.file.uploadFile(formData, setProgress, () => {
+    clear.current = api.file.uploadFile(formData, setProgress, () => {
       deleteUploadedFile();
       setIsVisible(false);
     });

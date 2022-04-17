@@ -9,7 +9,7 @@ import { SvgIcons } from '../elements/svg/svgIcons';
 import { SvgList } from '../elements/svg/svgList';
 import { SvgUp } from '../elements/svg/svgUp';
 import adaptiveSize from '../global_Function/adaptiveSize';
-import useApi from '../hooks/api.hook';
+import api from '../actions/api';
 import useStoragePage from '../hooks/storagePage.hook';
 import { Prompt } from './Prompt';
 import { Sort } from './Sort';
@@ -82,7 +82,6 @@ export const Toolbar: React.FC<IToolbar> = () => {
   const [createFolderPromptVisible, setCreateFolderPromptVisible] =
     useState<boolean>(false);
 
-  const api = useApi();
   const {
     openFolderHandler,
     parentFolder,
@@ -117,7 +116,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
   };
 
   const createFolder = async (nameFolder: string): Promise<void> => {
-    await api!.file.createDir({
+    await api.file.createDir({
       name: nameFolder.trim(),
       type: 'dir',
       parent: currentFolder,

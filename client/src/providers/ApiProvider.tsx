@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { setSettingUser } from '../actions/settingUser';
 import { API_URL } from '../config';
 import { APIContext } from '../contex/ApiContext';
-import useRequest from '../hooks/request.hook';
 import { useAction } from '../hooks/useAction';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { IDataLogin, IFile, ObjectString, typeSort } from '../Types/types';
@@ -21,9 +20,8 @@ type IMethod =
 const APIProvider: React.FC = ({ children }) => {
   // const { token, isAuthorization, auth, logout, setSettingUser } = useAuth();
   const { token } = useTypedSelector((state) => state.auth);
-  const { auth, logout } = useAction();
-  const { setMessage } = useAction();
-  const { setLoading, setIsSuccess } = useRequest();
+  const { auth, logout, setMessage, setLoadingRequest, setSuccessRequest } =
+    useAction();
 
   const request = useCallback(
     async (
@@ -32,7 +30,7 @@ const APIProvider: React.FC = ({ children }) => {
       bodyObject: ObjectString | FormData = {},
       headers: ObjectString = {}
     ) => {
-      setLoading(true);
+      setLoadingRequest(true);
 
       let body: FormData | string | null = null;
 
@@ -61,19 +59,19 @@ const APIProvider: React.FC = ({ children }) => {
         }
         setMessage(data.message || '');
 
-        setIsSuccess(true);
+        setSuccessRequest(true);
         setTimeout(() => {
-          setIsSuccess(false);
+          setSuccessRequest(false);
         }, 1500);
 
         return data;
       } catch (e: any) {
         setMessage(e.message);
       } finally {
-        setLoading(false);
+        setLoadingRequest(false);
       }
     },
-    [auth, setIsSuccess, setLoading, setMessage, token]
+    [auth, setSuccessRequest, setLoadingRequest, setMessage, token]
   );
 
   const registration = useCallback(

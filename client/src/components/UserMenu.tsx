@@ -7,8 +7,7 @@ import { Button } from '../elements/Button';
 import { FileLoad } from '../elements/FileLoad';
 import { SvgAddImage } from '../elements/svg/svgAddImage';
 import { SvgExit } from '../elements/svg/svgExit';
-import useRequest from '../hooks/request.hook';
-import useApi from '../hooks/api.hook';
+import api from '../actions/api';
 import { useAction } from '../hooks/useAction';
 import { setSettingUser } from '../actions/settingUser';
 import { useTypedSelector } from '../hooks/useTypedSelector';
@@ -56,8 +55,8 @@ export const UserMenu: React.FC<IUserMenu> = ({
 }) => {
   const { logout } = useAction();
   const { user } = useTypedSelector((state) => state.auth);
-  const api = useApi();
-  const { loading, isSuccess } = useRequest();
+  const { loadingRequest: loading, isSuccessRequest: isSuccess } =
+    useTypedSelector((state) => state.request);
 
   const logoutHandler = (): void => {
     setSettingUser({ currentFolder: user?._id || '' });
@@ -75,7 +74,7 @@ export const UserMenu: React.FC<IUserMenu> = ({
     const formData = new FormData();
     formData.append('file', file);
 
-    await api!.file.upLoadAvatar(formData);
+    await api.file.upLoadAvatar(formData);
   };
 
   return (

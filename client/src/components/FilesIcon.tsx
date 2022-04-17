@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { Flex } from '../elements/Flex';
-import useApi from '../hooks/api.hook';
+import api from '../actions/api';
 import useStoragePage from '../hooks/storagePage.hook';
 import { IFile } from '../Types/types';
 import ControlButtons from './ControlButtons';
@@ -79,7 +79,6 @@ interface IFilesIcon {
 const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
   const [storageFiles, setStorageFiles] = useState<IFile[]>([]);
 
-  const api = useApi();
   const {
     currentFolder,
     targetName,
@@ -130,7 +129,7 @@ const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
       console.log('Storage getFiles');
       if (currentFolder) {
         console.log('currentFolder: ', currentFolder);
-        const files = await api!.file.getFiles(currentFolder, typeSort);
+        const files = await api.file.getFiles(currentFolder, typeSort);
         setStorageFiles(files || []);
       }
     })();

@@ -6,7 +6,7 @@ import { SvgDownload } from '../elements/svg/svgDownload';
 import { SvgEdit } from '../elements/svg/svgEdit';
 import { SvgOpenFolder } from '../elements/svg/svgOpenFolder';
 import { SvgShare } from '../elements/svg/svgShare';
-import useApi from '../hooks/api.hook';
+import api from '../actions/api';
 import useStoragePage from '../hooks/storagePage.hook';
 import { useAction } from '../hooks/useAction';
 import { Prompt } from './Prompt';
@@ -46,13 +46,6 @@ const Wrapper = styled.div<{ parentType: parentType }>`
       height: 100%;
       align-content: center;
       justify-content: space-between;
-      /* margin: 0.2rem 0; */
-      /* @media ${(props) => props.theme.media.mobile} {
-        flex-direction: row;
-        flex-wrap: wrap;
-        height: 100%;
-        width: 100%;
-      } */
     `}
 `;
 
@@ -70,10 +63,6 @@ const FilesButtons = styled(Button)<{ parentType: parentType }>`
     props.parentType === 'table' &&
     css`
       height: 100%;
-      /* @media ${(props) => props.theme.media.mobile} {
-        width: 47%;
-        margin: 1%;
-      } */
     `}
 `;
 
@@ -93,7 +82,6 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
     setTargetName,
     setTargetSize,
   } = useStoragePage();
-  const api = useApi();
 
   const renameHandler = (): void => {
     setRenamePromptVisible(!renamePromptVisible);
@@ -101,7 +89,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
 
   const renameFile = async (newName: string): Promise<void> => {
     const name = newName.trim();
-    await api!.file.renameFile(name, target.id);
+    await api.file.renameFile(name, target.id);
     openFolderHandler('');
     openFolderHandler(currentFolder);
   };
@@ -113,7 +101,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
           parentType={parentType}
           dark
           click={() => {
-            api!.file.downloadFile(target.id, targetName);
+            api.file.downloadFile(target.id, targetName);
           }}
         >
           <SvgDownload />
@@ -142,7 +130,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
         parentType={parentType}
         dark
         click={async () => {
-          const link = await api!.file.shareFile(target.id);
+          const link = await api.file.shareFile(target.id);
           navigator.clipboard.writeText(link).then(() => {
             setMessage('link copied');
           });
@@ -155,7 +143,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
         parentType={parentType}
         dark
         click={async () => {
-          await api!.file.deleteFile(target.id);
+          await api.file.deleteFile(target.id);
           openFolderHandler('');
           openFolderHandler(currentFolder);
         }}

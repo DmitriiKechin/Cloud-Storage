@@ -5,7 +5,7 @@ import { ButtonClose } from '../elements/ButtonClose';
 import { Flex } from '../elements/Flex';
 import { Input } from '../elements/Input';
 import { PageCenter } from '../elements/PageCenter';
-import useRequest from '../hooks/request.hook';
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
 const Wrapper = styled.div<{ visible: boolean }>`
   display: ${(props) => (props.visible ? 'block' : 'none')};
@@ -40,7 +40,8 @@ export const Prompt: React.FC<IPrompt> = ({
   valueDefault,
   promptHandler,
 }) => {
-  const { loading, isSuccess } = useRequest();
+  const { loadingRequest: loading, isSuccessRequest: isSuccess } =
+    useTypedSelector((state) => state.request);
   const [value, setValue] = useState<string>(valueDefault || '');
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
