@@ -89,7 +89,6 @@ export const Toolbar: React.FC<IToolbar> = () => {
     useTypedSelector((state) => state.storagePage);
 
   const createFolderHandler = (): void => {
-    console.log('currentFolder: ', currentFolder);
     setCreateFolderPromptVisible(!createFolderPromptVisible);
   };
 
