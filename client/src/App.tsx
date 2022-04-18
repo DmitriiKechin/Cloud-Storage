@@ -5,7 +5,7 @@ import { Loader } from './elements/loader';
 import { PageCenter } from './elements/PageCenter';
 import { Message } from './elements/Message';
 import { useTypedSelector } from './hooks/useTypedSelector';
-import { useAction } from './hooks/useAction';
+import { useAuth } from './hooks/useAuth';
 
 const AppWraper = styled.div`
   width: 100%;
@@ -24,7 +24,7 @@ const App: React.FC<{ storagePage: JSX.Element; authPage: JSX.Element }> = ({
 }) => {
   const navigate = useNavigate();
   const { loading, isAuthorization } = useTypedSelector((state) => state.auth);
-  const { startAuth } = useAction();
+  const { startAuth } = useAuth();
 
   useEffect(() => {
     if (!loading) {

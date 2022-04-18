@@ -9,11 +9,11 @@ import { SvgIcons } from '../elements/svg/svgIcons';
 import { SvgList } from '../elements/svg/svgList';
 import { SvgUp } from '../elements/svg/svgUp';
 import adaptiveSize from '../global_Function/adaptiveSize';
-import api from '../actions/api';
 import { Prompt } from './Prompt';
 import { Sort } from './Sort';
 import { useAction } from '../hooks/useAction';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useApi } from '../hooks/useApi';
 
 const StyledToolbar = styled.div`
   flex: 0 0 2.9rem;
@@ -82,7 +82,7 @@ interface IToolbar {}
 export const Toolbar: React.FC<IToolbar> = () => {
   const [createFolderPromptVisible, setCreateFolderPromptVisible] =
     useState<boolean>(false);
-
+  const api = useApi();
   const { setCurrentFolder, setParentFolder, setIsTable, setUploadedFiles } =
     useAction();
   const { parentFolder, currentFolder, isTable, uploadedFiles } =

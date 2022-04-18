@@ -7,12 +7,12 @@ import React, {
 } from 'react';
 import styled from 'styled-components';
 import { Flex } from '../elements/Flex';
-import api from '../actions/api';
 import { IFile } from '../Types/types';
 import ControlButtons from './ControlButtons';
 import { FileIcon } from './FileIcon';
 import { PropertyAndValue } from './PropertyAndValue';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useApi } from '../hooks/useApi';
 
 const Wrapper = styled.div`
   flex: 1 1;
@@ -78,7 +78,7 @@ interface IFilesIcon {
 
 const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
   const [storageFiles, setStorageFiles] = useState<IFile[]>([]);
-
+  const api = useApi();
   const {
     currentFolder,
     targetName,

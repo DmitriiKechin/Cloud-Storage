@@ -4,11 +4,11 @@ import { Button } from '../elements/Button';
 import { Flex } from '../elements/Flex';
 import { SvgClose } from '../elements/svg/svgClose';
 import nameShort from '../global_Function/nameShort';
-import api from '../actions/api';
 import { ILoadedFile } from '../Types/types';
 import { Progressbar } from './Progressbar';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useAction } from '../hooks/useAction';
+import { useApi } from '../hooks/useApi';
 
 const Wrapper = styled.div<{ visible: boolean }>`
   width: 100%;
@@ -47,6 +47,7 @@ const FileLoader: React.FC<IFileLoader> = ({ file }) => {
   const { uploadedFiles, currentFolder } = useTypedSelector(
     (state) => state.storagePage
   );
+  const api = useApi();
 
   const deleteUploadedFile = useCallback(() => {
     setTimeout(() => {

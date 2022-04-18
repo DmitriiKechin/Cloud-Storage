@@ -5,11 +5,11 @@ import { Button } from '../elements/Button';
 import { Flex } from '../elements/Flex';
 import { Input } from '../elements/Input';
 import { PageCenter } from '../elements/PageCenter';
-import api from '../actions/api';
 import logo from '../img/logo.svg';
 import { IDataLogin } from '../Types/types';
 import { useAction } from '../hooks/useAction';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useApi } from '../hooks/useApi';
 
 const StyledAuthPage = styled.form`
   width: 22rem;
@@ -23,6 +23,7 @@ const StyledAuthPage = styled.form`
 
 export const AuthPage: React.FC = () => {
   const { login } = useAction();
+  const api = useApi();
   const { loadingRequest: loading, isSuccessRequest: isSuccess } =
     useTypedSelector((state) => state.request);
 

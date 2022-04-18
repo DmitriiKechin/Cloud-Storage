@@ -6,10 +6,10 @@ import { SvgDownload } from '../elements/svg/svgDownload';
 import { SvgEdit } from '../elements/svg/svgEdit';
 import { SvgOpenFolder } from '../elements/svg/svgOpenFolder';
 import { SvgShare } from '../elements/svg/svgShare';
-import api from '../actions/api';
 import { useAction } from '../hooks/useAction';
 import { Prompt } from './Prompt';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useApi } from '../hooks/useApi';
 
 type parentType = 'table' | 'icons';
 
@@ -78,6 +78,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
     setTargetName,
     setTargetSize,
   } = useAction();
+  const api = useApi();
   const { targetType, target, targetName, currentFolder, parentFolder } =
     useTypedSelector((state) => state.storagePage);
 
