@@ -89,6 +89,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
     useTypedSelector((state) => state.storagePage);
 
   const createFolderHandler = (): void => {
+    console.log('currentFolder: ', currentFolder);
     setCreateFolderPromptVisible(!createFolderPromptVisible);
   };
 
@@ -117,7 +118,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
       parent: currentFolder,
     });
 
-    setCurrentFolder('');
+    // setCurrentFolder('');
     setCurrentFolder(currentFolder);
   };
 

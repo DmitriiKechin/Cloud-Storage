@@ -94,7 +94,6 @@ const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
   const сomputationMargin = useCallback(() => {
     if (wrapperRef.current) {
       const rem = Number.parseFloat(getComputedStyle(document.body).fontSize);
-      console.log('icon resize');
       const widthWrapper = wrapperRef.current.offsetWidth - 0.4 * rem - 0.5;
       const numberOfIconInRow = Math.floor(widthWrapper / (6.4 * rem));
       const margin =
@@ -126,9 +125,7 @@ const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
 
   useEffect(() => {
     (async () => {
-      console.log('Storage getFiles');
       if (currentFolder) {
-        console.log('currentFolder: ', currentFolder);
         const files = await api.file.getFiles(currentFolder, typeSort);
         setStorageFiles(files || []);
       }

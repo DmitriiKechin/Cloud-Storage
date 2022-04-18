@@ -60,7 +60,7 @@ const Wrapper = styled.div<{ visible: boolean }>`
 interface IUploadManager {}
 
 export const UploadManager: React.FC<IUploadManager> = () => {
-  const { setUploadedFiles, setCurrentFolder } = useAction();
+  // const { setCurrentFolder } = useAction();
   const { uploadedFiles, currentFolder } = useTypedSelector(
     (state) => state.storagePage
   );
@@ -69,10 +69,11 @@ export const UploadManager: React.FC<IUploadManager> = () => {
   useEffect(() => {
     if (uploadedFiles.length === 0) {
       setIsVisible(false);
-      setCurrentFolder('');
-      setTimeout(() => {
-        setCurrentFolder(currentFolder);
-      }, 0);
+      console.log('currentFolder: ', currentFolder);
+      // setCurrentFolder('');
+      // setTimeout(() => {
+      //   setCurrentFolder(currentFolder); //!what is it?
+      // }, 0);
     } else {
       setIsVisible(true);
     }

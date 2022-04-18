@@ -88,7 +88,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
   const renameFile = async (newName: string): Promise<void> => {
     const name = newName.trim();
     await api.file.renameFile(name, target.id);
-    setCurrentFolder('');
+    // setCurrentFolder('');
     setCurrentFolder(currentFolder);
   };
 
@@ -142,7 +142,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
         dark
         click={async () => {
           await api.file.deleteFile(target.id);
-          setCurrentFolder('');
+          // setCurrentFolder('');
           setCurrentFolder(currentFolder);
         }}
       >
