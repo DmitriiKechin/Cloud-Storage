@@ -45,7 +45,7 @@ export const auth = (token: string) => {
 
       dispatch(login({ token: data.token, user: data.user }));
     } catch (e: any) {
-      setMessage(e.message);
+      dispatch(setMessage(e.message));
       dispatch(logout());
     }
   };
