@@ -27,7 +27,6 @@ const App: React.FC<{ storagePage: JSX.Element; authPage: JSX.Element }> = ({
   const { startAuth } = useAction();
 
   useEffect(() => {
-    startAuth();
     if (!loading) {
       if (isAuthorization) {
         navigate('/storage');
@@ -37,7 +36,9 @@ const App: React.FC<{ storagePage: JSX.Element; authPage: JSX.Element }> = ({
     }
   }, [isAuthorization, navigate, loading]);
 
-  console.log('App render');
+  useEffect(() => {
+    startAuth();
+  }, []);
 
   return (
     <AppWraper>
