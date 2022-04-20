@@ -34,7 +34,7 @@ interface IFilesTable {
 
 export const FilesTable: React.FC<IFilesTable> = ({ update }) => {
   const [storageFiles, setStorageFiles] = useState<IFile[]>([]);
-  const { currentFolder, typeSort } = useTypedSelector(
+  const { currentFolder, typeSort, updateFiles } = useTypedSelector(
     (state) => state.storagePage
   );
   const api = useApi();
@@ -56,7 +56,7 @@ export const FilesTable: React.FC<IFilesTable> = ({ update }) => {
         setStorageFiles(files || []);
       }
     })();
-  }, [currentFolder, typeSort]);
+  }, [currentFolder, typeSort, updateFiles]);
 
   const files = arrayFiles(storageFiles);
   return (

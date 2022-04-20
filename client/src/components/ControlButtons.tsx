@@ -77,6 +77,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
     setTargetDate,
     setTargetName,
     setTargetSize,
+    updateFiles,
   } = useAction();
   const api = useApi();
   const { targetType, target, targetName, currentFolder, parentFolder } =
@@ -89,8 +90,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
   const renameFile = async (newName: string): Promise<void> => {
     const name = newName.trim();
     await api.file.renameFile(name, target.id);
-    // setCurrentFolder('');
-    setCurrentFolder(currentFolder);
+    updateFiles();
   };
 
   return (
@@ -143,8 +143,7 @@ const ControlButtons: React.FC<IControlButtons> = ({ parentType }) => {
         dark
         click={async () => {
           await api.file.deleteFile(target.id);
-          // setCurrentFolder('');
-          setCurrentFolder(currentFolder);
+          updateFiles();
         }}
       >
         <SvgDelete />

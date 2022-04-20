@@ -101,3 +101,11 @@ export const setUploadedFiles = (uploadedFiles: ILoadedFile[]) => {
     });
   };
 };
+
+export const updateFiles = () => {
+  return (dispatch: Dispatch<StoragePageAction>) => {
+    dispatch({
+      type: storagePageActionTypes.UPDATE_FILES,
+    });
+  };
+};

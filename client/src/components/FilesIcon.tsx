@@ -86,6 +86,7 @@ const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
     targetSize,
     targetCountFiles,
     typeSort,
+    updateFiles,
   } = useTypedSelector((state) => state.storagePage);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -130,7 +131,7 @@ const FilesIcon: React.FC<IFilesIcon> = ({ update }) => {
         setStorageFiles(files || []);
       }
     })();
-  }, [currentFolder, typeSort]);
+  }, [currentFolder, typeSort, updateFiles]);
 
   const files = arrayFiles(storageFiles);
 

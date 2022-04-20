@@ -19,6 +19,7 @@ const initialState: StoragePageState = {
   typeSort: 'Name',
   targetSize: '0',
   uploadedFiles: [],
+  updateFiles: false,
 };
 
 export const storagePageReducer = (
@@ -58,6 +59,9 @@ export const storagePageReducer = (
 
     case storagePageActionTypes.UPLOADED_FILES:
       return { ...state, uploadedFiles: action.payload };
+
+    case storagePageActionTypes.UPDATE_FILES:
+      return { ...state, updateFiles: !state.updateFiles };
 
     default:
       return state;

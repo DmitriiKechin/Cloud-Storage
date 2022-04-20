@@ -17,6 +17,7 @@ export interface StoragePageState {
   typeSort: typeSort;
   isTable: boolean;
   uploadedFiles: ILoadedFile[];
+  updateFiles: boolean;
 }
 
 export enum storagePageActionTypes {
@@ -31,6 +32,7 @@ export enum storagePageActionTypes {
   TYPE_SORT = 'TYPE_SORT',
   IS_TABLE = 'IS_TABLE',
   UPLOADED_FILES = 'UPLOADED_FILES',
+  UPDATE_FILES = 'UPDATE_FILES',
 }
 
 interface currentFolderAction {
@@ -84,6 +86,10 @@ interface uploadedFiles {
   payload: ILoadedFile[];
 }
 
+interface updateFilesAction {
+  type: storagePageActionTypes.UPDATE_FILES;
+}
+
 export type StoragePageAction =
   | currentFolderAction
   | parentFolderAction
@@ -95,4 +101,5 @@ export type StoragePageAction =
   | targetTypeAction
   | typeSortAction
   | isTableAction
-  | uploadedFiles;
+  | uploadedFiles
+  | updateFilesAction;
