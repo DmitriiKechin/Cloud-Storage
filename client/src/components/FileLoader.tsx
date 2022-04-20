@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import { Button } from '../elements/Button';
 import { Flex } from '../elements/Flex';
 import { SvgClose } from '../elements/svg/svgClose';
-import nameShort from '../global_Function/nameShort';
+import nameShort from '../helpers/nameShort';
 import { ILoadedFile } from '../Types/types';
 import { Progressbar } from './Progressbar';
 import { useTypedSelector } from '../hooks/useTypedSelector';

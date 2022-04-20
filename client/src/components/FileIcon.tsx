@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import formattedDate from '../global_Function/formattedDate';
-import formattedSize from '../global_Function/formattedSize';
-import getIcon from '../global_Function/getIcon';
-import nameShort from '../global_Function/nameShort';
+import formattedDate from '../helpers/formattedDate';
+import formattedSize from '../helpers/formattedSize';
+import getIcon from '../helpers/getIcon';
+import nameShort from '../helpers/nameShort';
 import { useAction } from '../hooks/useAction';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { IFile } from '../Types/types';

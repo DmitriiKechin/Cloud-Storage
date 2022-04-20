@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import { setSettingUser } from '../actions/settingUser';
+import { setSettingUser } from '../helpers/settingUser';
 import { Flex } from '../elements/Flex';
 import { SvgSort } from '../elements/svg/svgSort';
 import { SvgTriangleDown } from '../elements/svg/svgTriangleDown';

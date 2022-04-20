@@ -8,7 +8,7 @@ import { FileLoad } from '../elements/FileLoad';
 import { SvgAddImage } from '../elements/svg/svgAddImage';
 import { SvgExit } from '../elements/svg/svgExit';
 import { useAction } from '../hooks/useAction';
-import { setSettingUser } from '../actions/settingUser';
+import { setSettingUser } from '../helpers/settingUser';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useApi } from '../hooks/useApi';
 

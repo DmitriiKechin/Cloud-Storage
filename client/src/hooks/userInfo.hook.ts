@@ -1,5 +1,5 @@
 import { API_URL } from '../config';
-import formattedSize from '../global_Function/formattedSize';
+import formattedSize from '../helpers/formattedSize';
 import { IUser } from '../Types/types';
 import { useTypedSelector } from './useTypedSelector';
 

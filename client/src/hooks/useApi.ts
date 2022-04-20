@@ -4,7 +4,7 @@ import { storageName } from '../Types/auth';
 import { IDataLogin, IFile, ObjectString, typeSort } from '../Types/types';
 import { IApi, IMethod } from '../Types/api';
 import { useAction } from './useAction';
-import { setSettingUser } from '../actions/settingUser';
+import { setSettingUser } from '../helpers/settingUser';
 import { useAuth } from './useAuth';
 
 export const useApi = (): IApi => {

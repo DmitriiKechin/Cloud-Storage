@@ -1,10 +1,10 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import styled, { css } from 'styled-components';
-import adaptiveSize from '../global_Function/adaptiveSize';
-import formattedDate from '../global_Function/formattedDate';
-import formattedSize from '../global_Function/formattedSize';
-import getIcon from '../global_Function/getIcon';
-import nameShort from '../global_Function/nameShort';
+import adaptiveSize from '../helpers/adaptiveSize';
+import formattedDate from '../helpers/formattedDate';
+import formattedSize from '../helpers/formattedSize';
+import getIcon from '../helpers/getIcon';
+import nameShort from '../helpers/nameShort';
 import { useAction } from '../hooks/useAction';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { IFile } from '../Types/types';

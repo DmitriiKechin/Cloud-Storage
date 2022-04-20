@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { setSettingUser } from '../actions/settingUser';
+import { setSettingUser } from '../helpers/settingUser';
 import { Button } from '../elements/Button';
 import { FileLoad } from '../elements/FileLoad';
 import { SvgAdd } from '../elements/svg/svgAdd';
@@ -8,7 +8,7 @@ import { SvgAddFolder } from '../elements/svg/svgAddFolder';
 import { SvgIcons } from '../elements/svg/svgIcons';
 import { SvgList } from '../elements/svg/svgList';
 import { SvgUp } from '../elements/svg/svgUp';
-import adaptiveSize from '../global_Function/adaptiveSize';
+import adaptiveSize from '../helpers/adaptiveSize';
 import { Prompt } from './Prompt';
 import { Sort } from './Sort';
 import { useAction } from '../hooks/useAction';
@@ -83,8 +83,13 @@ export const Toolbar: React.FC<IToolbar> = () => {
   const [createFolderPromptVisible, setCreateFolderPromptVisible] =
     useState<boolean>(false);
   const api = useApi();
-  const { setCurrentFolder, setParentFolder, setIsTable, setUploadedFiles } =
-    useAction();
+  const {
+    setCurrentFolder,
+    setParentFolder,
+    setIsTable,
+    setUploadedFiles,
+    updateFiles,
+  } = useAction();
   const { parentFolder, currentFolder, isTable, uploadedFiles } =
     useTypedSelector((state) => state.storagePage);
 
@@ -117,8 +122,7 @@ export const Toolbar: React.FC<IToolbar> = () => {
       parent: currentFolder,
     });
 
-    // setCurrentFolder('');
-    setCurrentFolder(currentFolder);
+    updateFiles();
   };
 
   return (

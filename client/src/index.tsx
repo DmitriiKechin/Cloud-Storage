@@ -8,7 +8,7 @@ import { DefaultTheme } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthPage } from './pages/AuthPage';
 import { StoragePage } from './pages/StoragePage';
-import adaptiveSize from './global_Function/adaptiveSize';
+import adaptiveSize from './helpers/adaptiveSize';
 import { Provider } from 'react-redux';
 import { store } from './store';
 
